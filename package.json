@@ -1,0 +1,26 @@
+{
+  "name": "arattix",
+  "version": "0.3.1",
+  "description": "Node.js library for Arattai messaging API automation.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "arattai",
+    "arattix",
+    "messaging",
+    "automation",
+    "bot",
+    "chat"
+  ],
+  "author": "Vivek Kumar",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.7.0",
+    "axios-cookiejar-support": "^4.0.7",
+    "tough-cookie": "^4.1.3",
+    "qrcode-terminal": "^0.12.0",
+    "mime-types": "^2.1.35"
+  }
+}
