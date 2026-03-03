@@ -1,6 +1,6 @@
-# arattix
+# Arattix
 
-Node.js library for **Arattai** messaging API automation — a port of the [arattai](https://pypi.org/project/arattai/) Python package.
+Node.js library for the **Arattai** messaging API — send messages, media, and build bots.
 
 ## Installation
 
@@ -14,101 +14,149 @@ npm install arattix
 const { ArattixBot } = require('arattix');
 
 (async () => {
-  // Initialize the bot (shows QR in terminal by default)
   const arattix = new ArattixBot({ isShowQr: true });
-
-  // Login using QR code (reuses saved session if valid)
   const bot = await arattix.loginWithQr();
 
-  // Fetch chats (limit to 500)
-  const chats = await bot.fetchChats({ limit: 500 });
-  console.log(chats);
-
-  // Send a text message using a Chat object
+  // Fetch chats
+  const chats = await bot.fetchChats({ limit: 20 });
   const chatId = Object.keys(chats)[0];
-  await bot.sender.sendMessage('Hello from arattix!', { chat: chats[chatId] });
 
-  // Send a text message to a specific chat ID
-  await bot.sender.sendMessage('Hello!', { chatId: '2343453654645_chat_id' });
+  // Send a text message
+  await bot.sender.sendMessage('Hello from Arattix!', { chat: chats[chatId] });
 
-  // Send a file with caption using a Chat object
+  // Send a file
   await bot.sender.sendFile('photo.jpg', 'My caption', { chat: chats[chatId] });
-
-  // Send a file with caption to a specific chat ID
-  await bot.sender.sendFile('document.pdf', 'Important doc', { chatId: '2343453654645_chat_id' });
 })();
+```
+
+## Examples
+
+Run the simple polling bot:
+
+```bash
+node Example/simple-bot.js
+```
+
+Or the class-based command bot:
+
+```bash
+node Example/command-bot.js
+```
+
+## Project Structure
+
+```
+arattix/
+├── src/
+│   ├── Auth/              # Authentication (QR login, session management)
+│   │   ├── index.js
+│   │   ├── qr-login.js
+│   │   ├── session-manager.js
+│   │   └── token-login.js
+│   ├── Defaults/          # Constants & configuration
+│   │   └── index.js
+│   ├── Socket/            # Core API (connection, chats, messages, media)
+│   │   ├── index.js       # ArattixBot entry point
+│   │   ├── bot.js         # Bot class — chats, messages, media download
+│   │   └── messages.js    # MessageSender — send text, files, media
+│   ├── Types/             # Data models
+│   │   ├── index.js
+│   │   ├── Chat.js        # Chat, ChatManager
+│   │   ├── Message.js     # Message, MediaInfo
+│   │   └── Participant.js # Participant
+│   └── index.js           # Barrel export
+├── Example/
+│   ├── simple-bot.js      # Polling bot with commands + media detection
+│   └── command-bot.js     # Class-based bot
+├── index.js               # Package entry
+├── package.json
+├── LICENSE
+└── README.md
 ```
 
 ## API Reference
 
 ### `ArattixBot`
 
-Main entry point. Creates a session and handles authentication.
-
 ```js
 const arattix = new ArattixBot({ isShowQr: true, proxy: null });
+const bot = await arattix.loginWithQr();
 ```
-
-| Option     | Type      | Default | Description                                   |
-|------------|-----------|---------|-----------------------------------------------|
-| `isShowQr` | `boolean` | `true`  | Display QR code in the terminal               |
-| `proxy`    | `string`  | `null`  | HTTP proxy URL (e.g. `http://127.0.0.1:8888`) |
-
-#### `arattix.loginWithQr() → Promise<Bot>`
-
-Authenticates via QR code. Reuses saved session cookies if still valid.
-
----
 
 ### `Bot`
 
-Returned after successful login. Provides chat and messaging functionality.
+#### Chats
 
-#### `bot.fetchChats({ pinned, limit }) → Promise<Object>`
+```js
+const chats = await bot.fetchChats({ limit: 20 });
+const raw = await bot.fetchChatsRaw({ limit: 20 });
+const live = await bot.fetchChatsLive({ limit: 20 });
+```
 
-Fetch chats from the server.
+#### Messages (v2 — live, uncached)
 
-| Option   | Type      | Default | Description                 |
-|----------|-----------|---------|-----------------------------|
-| `pinned` | `boolean` | `false` | Fetch only pinned chats     |
-| `limit`  | `number`  | `20`    | Max number of chats to get  |
+```js
+const messages = await bot.fetchMessages(chatId, { limit: 20 });
+```
 
-Returns an object mapping `chatId → Chat`.
+#### Media Download
 
-#### `bot.sender → MessageSender`
+```js
+// Download to buffer
+const { data, contentType, fileName } = await bot.downloadMedia(fileId, chatId);
 
-Returns a `MessageSender` instance for this session.
+// Download to file
+await bot.downloadMediaToFile(fileId, chatId, './photo.jpg');
 
----
+// Get download URL
+const url = bot.getMediaUrl(fileId, chatId);
+
+// Download thumbnail
+const thumb = await bot.downloadMedia(fileId, chatId, { thumbnail: true });
+```
+
+#### Media Detection
+
+```js
+if (Bot.isMediaMessage(msg)) {
+  const info = Bot.getMediaInfo(msg);
+  console.log(info.fileName, info.mimeType, info.size);
+  console.log(info.isImage, info.isAudio, info.isVideo);
+}
+```
 
 ### `MessageSender`
 
-#### `sender.sendMessage(message, { chatId?, dname?, chat? }) → Promise`
+```js
+await bot.sender.sendMessage('Hello!', { chatId });
+await bot.sender.sendFile('./photo.jpg', 'caption', { chatId });
+await bot.sender.sendImage('./img.png', 'caption', { chatId });
+await bot.sender.sendAudio('./audio.mp3', '', { chatId });
+await bot.sender.sendVideo('./video.mp4', '', { chatId });
+await bot.sender.sendDocument('./doc.pdf', 'Here', { chatId });
+await bot.sender.sendBuffer(buffer, 'file.jpg', { chatId, mimeType: 'image/jpeg' });
+```
 
-Send a text message to a chat.
+### Types
 
-#### `sender.sendFile(filePath, caption, { chatId?, dname?, chat? }) → Promise`
+| Class | Fields |
+|-------|--------|
+| `Chat` | `chatId`, `title`, `owner`, `participants`, `message`, `lastmsguid` |
+| `Message` | `msguid`, `msg` |
+| `MediaInfo` | `fileId`, `fileName`, `mimeType`, `size`, `width`, `height`, `thumbnail` |
+| `Participant` | `dname`, `zuid` |
+| `ChatManager` | `parseChatData()` → `{ chatId: Chat }` |
 
-Send a file (with optional caption) to a chat.
+## Defaults
 
----
+All API URLs and constants are centralized in `src/Defaults/index.js`:
 
-### Models
-
-- **`Chat`** — `chatId`, `title`, `owner`, `participants`, `message`, `lastmsguid`
-- **`Message`** — `msguid`, `msg`
-- **`Participant`** — `dname`, `zuid`
-
-## Feature Parity with Python `arattai`
-
-| Feature              | Python (`arattai`) | Node.js (`arattix`) |
-|----------------------|--------------------|---------------------|
-| QR Code Login        | ✅                 | ✅                  |
-| Session Persistence  | ✅ (pickle)        | ✅ (JSON files)     |
-| Fetch Chats          | ✅                 | ✅                  |
-| Send Text Message    | ✅                 | ✅                  |
-| Send File            | ✅                 | ✅                  |
-| Token Login          | ⬜ (placeholder)   | ⬜ (placeholder)    |
+```js
+const { Defaults } = require('arattix');
+console.log(Defaults.WEB_BASE_URL);        // https://web.arattai.in
+console.log(Defaults.FILE_DOWNLOAD_URL);    // https://files.arattai.in/webdownload
+console.log(Defaults.DOWNLOAD_SERVICE);     // CLIQ
+```
 
 ## License
 

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatManager — Arattix Documentation</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+
+<nav class="site-sidebar">
+  <div class="sidebar-header">
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">A</div>
+      <span class="logo-text">Arattix</span>
+      <span class="logo-version">v1.0.0</span>
+    </a>
+  </div>
+  <div class="sidebar-nav">
+    <div class="sidebar-section"><div class="sidebar-section-title">Guide</div></div>
+    <a href="../index.html">Introduction</a>
+    <a href="../getting-started.html">Getting Started</a>
+    <a href="../examples.html">Examples</a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Socket</div></div>
+    <a href="ArattixBot.html">ArattixBot <span class="badge badge-class">C</span></a>
+    <a href="Bot.html">Bot <span class="badge badge-class">C</span></a>
+    <a href="MessageSender.html">MessageSender <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Types</div></div>
+    <a href="Chat.html">Chat <span class="badge badge-class">C</span></a>
+    <a href="ChatManager.html" class="active">ChatManager <span class="badge badge-class">C</span></a>
+    <a href="Message.html">Message <span class="badge badge-class">C</span></a>
+    <a href="MediaInfo.html">MediaInfo <span class="badge badge-class">C</span></a>
+    <a href="Participant.html">Participant <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Other</div></div>
+    <a href="../modules/Defaults.html">Defaults <span class="badge badge-const">D</span></a>
+    <a href="../modules/Auth.html">Auth <span class="badge badge-fn">M</span></a>
+  </div>
+</nav>
+
+<div class="site-content">
+<main class="page-content">
+
+  <div class="breadcrumb">
+    <a href="../index.html">arattix</a>
+    <span class="separator">›</span>
+    <a href="../index.html#api-reference">Types</a>
+    <span class="separator">›</span>
+    ChatManager
+  </div>
+
+  <h1>Class: ChatManager</h1>
+  <p>
+    Parses raw chat API response data into structured <a href="Chat.html">Chat</a> objects.
+    Used internally by <a href="Bot.html#chats">Bot.fetchChats()</a>.
+  </p>
+  <p><strong>Source:</strong> <code>src/Types/Chat.js</code></p>
+
+  <h2 id="constructor">Constructor</h2>
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">new ChatManager(chatData)</span>
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>chatData</dt>
+        <dd><code>object</code> — Raw API response from the chat endpoint.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <h2 id="methods">Methods</h2>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">parseChatData()</span>
+      <span class="member-tag tag-method">method</span>
+    </div>
+    <div class="member-sig">parseChatData(): Object.&lt;string, <a href="Chat.html">Chat</a>&gt;</div>
+    <div class="member-desc">
+      Parse the raw chat data into a map of chatId → <a href="Chat.html">Chat</a> instances.
+      Extracts participants, last message info, and builds full Chat objects.
+    </div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">getChats()</span>
+      <span class="member-tag tag-method">method</span>
+    </div>
+    <div class="member-sig">getChats(): Object.&lt;string, <a href="Chat.html">Chat</a>&gt;</div>
+    <div class="member-desc">Returns the parsed chats object (empty until <code>parseChatData()</code> is called).</div>
+  </div>
+
+  <pre><code class="language-javascript">// Usually used internally by Bot:
+const raw = await bot.fetchChatsRaw();
+const manager = new ChatManager(raw);
+const chats = manager.parseChatData();
+
+// { "chat_id_1": Chat, "chat_id_2": Chat, ... }</code></pre>
+
+  <div class="site-footer">
+    Arattix &copy; 2025 SafwanGanz — MIT License —
+    <a href="https://github.com/SafwanGanz/Arattix">GitHub</a>
+  </div>
+
+</main>
+
+<aside class="page-toc">
+  <div class="toc-title">On This Page</div>
+  <a href="#constructor">Constructor</a>
+  <a href="#methods">Methods</a>
+</aside>
+</div>
+
+<script>hljs.highlightAll();</script>
+<script src="../assets/main.js"></script>
+</body>
+</html>

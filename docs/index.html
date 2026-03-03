@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arattix — Node.js Library for Arattai Messaging API</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+
+<!-- ════════════════ SIDEBAR ════════════════ -->
+<nav class="site-sidebar">
+  <div class="sidebar-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">A</div>
+      <span class="logo-text">Arattix</span>
+      <span class="logo-version">v1.0.0</span>
+    </a>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Guide</div>
+    </div>
+    <a href="index.html" class="active">Introduction</a>
+    <a href="getting-started.html">Getting Started</a>
+    <a href="examples.html">Examples</a>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Socket</div>
+    </div>
+    <a href="classes/ArattixBot.html">ArattixBot <span class="badge badge-class">C</span></a>
+    <a href="classes/Bot.html">Bot <span class="badge badge-class">C</span></a>
+    <a href="classes/MessageSender.html">MessageSender <span class="badge badge-class">C</span></a>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Types</div>
+    </div>
+    <a href="classes/Chat.html">Chat <span class="badge badge-class">C</span></a>
+    <a href="classes/ChatManager.html">ChatManager <span class="badge badge-class">C</span></a>
+    <a href="classes/Message.html">Message <span class="badge badge-class">C</span></a>
+    <a href="classes/MediaInfo.html">MediaInfo <span class="badge badge-class">C</span></a>
+    <a href="classes/Participant.html">Participant <span class="badge badge-class">C</span></a>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Other</div>
+    </div>
+    <a href="modules/Defaults.html">Defaults <span class="badge badge-const">D</span></a>
+    <a href="modules/Auth.html">Auth <span class="badge badge-fn">M</span></a>
+  </div>
+</nav>
+
+<!-- ════════════════ CONTENT ════════════════ -->
+<div class="site-content">
+<main class="page-content">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-logo">A</div>
+    <h1>Arattix</h1>
+    <p>A modern Node.js library for the Arattai messaging API</p>
+    <div class="hero-badges">
+      <img src="https://img.shields.io/npm/v/arattix?color=blue" alt="npm version">
+      <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT license">
+      <img src="https://img.shields.io/badge/node-%3E%3D14-brightgreen" alt="node >= 14">
+    </div>
+  </div>
+
+  <!-- Introduction -->
+  <h2 id="introduction">Introduction</h2>
+  <p>
+    <strong>Arattix</strong> is a reverse-engineered Node.js library that lets you build bots and automation tools for the
+    <a href="https://arattai.in" target="_blank">Arattai</a> messaging platform. It handles authentication (QR code login),
+    session management, chat/message polling, and full media support — all through a clean, promise-based API.
+  </p>
+
+  <div class="callout">
+    <strong>Note</strong>
+    Arattix communicates with the Arattai web API. You need a valid Arattai account to authenticate.
+  </div>
+
+  <!-- Features -->
+  <h2 id="features">Features</h2>
+  <ul class="feature-grid">
+    <li>
+      <strong>🔐 QR Code Login</strong>
+      <span>Authenticate by scanning a QR code — sessions are saved &amp; reused automatically.</span>
+    </li>
+    <li>
+      <strong>💬 Text Messaging</strong>
+      <span>Send &amp; receive text messages across all your chats with bot.sender methods.</span>
+    </li>
+    <li>
+      <strong>📁 Media Support</strong>
+      <span>Download and upload images, audio, video, and documents with full MIME handling.</span>
+    </li>
+    <li>
+      <strong>🔄 Live Polling</strong>
+      <span>Fetch messages from the V2 API for real-time, zero-delay message detection.</span>
+    </li>
+    <li>
+      <strong>📦 Typed Models</strong>
+      <span>Structured Chat, Message, Participant, and MediaInfo classes for clean data access.</span>
+    </li>
+    <li>
+      <strong>⚡ Proxy Support</strong>
+      <span>Optional HTTP proxy for running behind firewalls or VPNs.</span>
+    </li>
+  </ul>
+
+  <!-- Quick Example -->
+  <h2 id="example">Quick Example</h2>
+  <pre><code class="language-javascript">const { ArattixBot } = require('arattix');
+
+async function main() {
+  // Create client &amp; authenticate via QR code
+  const arattix = new ArattixBot({ isShowQr: true });
+  const bot = await arattix.loginWithQr();
+
+  // Set up CSRF token
+  await bot.setupCsrf();
+
+  // Fetch all chats
+  const chats = await bot.fetchChats({ limit: 20 });
+
+  for (const [chatId, chat] of Object.entries(chats)) {
+    console.log(`${chat.title} — ${chatId}`);
+
+    // Send a message
+    await bot.sender.sendMessage('Hello from Arattix!', { chat });
+  }
+}
+
+main();</code></pre>
+
+  <!-- Installation -->
+  <h2 id="installation">Installation</h2>
+  <div class="install-box">
+    <span class="prompt">$</span> npm install arattix
+  </div>
+  <p>Or clone from GitHub:</p>
+  <pre><code class="language-bash">git clone https://github.com/SafwanGanz/Arattix.git
+cd Arattix
+npm install</code></pre>
+
+  <!-- Project Structure -->
+  <h2 id="structure">Project Structure</h2>
+  <p>The library follows a Baileys-inspired modular architecture:</p>
+  <pre><code class="language-text">arattix/
+├── src/
+│   ├── Auth/              # Authentication (QR login, session management)
+│   │   ├── qr-login.js
+│   │   ├── session-manager.js
+│   │   └── token-login.js
+│   ├── Defaults/          # API URLs &amp; constants
+│   │   └── index.js
+│   ├── Socket/            # Core API layer
+│   │   ├── index.js       # ArattixBot entry point
+│   │   ├── bot.js         # Bot (chats, messages, media)
+│   │   └── messages.js    # MessageSender (text &amp; files)
+│   ├── Types/             # Data models
+│   │   ├── Chat.js        # Chat, ChatManager
+│   │   ├── Message.js     # Message, MediaInfo
+│   │   └── Participant.js
+│   └── index.js
+├── Example/
+│   ├── simple-bot.js
+│   └── command-bot.js
+└── package.json</code></pre>
+
+  <!-- Getting Started Overview -->
+  <h2 id="getting-started">Getting Started</h2>
+
+  <h3 id="authentication">1. Authentication</h3>
+  <p>
+    Arattix authenticates by scanning a QR code with your Arattai mobile app. The session cookies are
+    saved to <code>cookies.json</code> and reused on subsequent runs.
+  </p>
+  <pre><code class="language-javascript">const { ArattixBot } = require('arattix');
+
+const arattix = new ArattixBot({ isShowQr: true });
+const bot = await arattix.loginWithQr();
+await bot.setupCsrf();</code></pre>
+
+  <h3 id="fetching-chats">2. Fetching Chats</h3>
+  <p>
+    Use <code>bot.fetchChats()</code> to get parsed Chat objects, or <code>bot.fetchChatsLive()</code>
+    to bypass server-side session caching for guaranteed fresh data.
+  </p>
+  <pre><code class="language-javascript">// Parsed Chat map
+const chats = await bot.fetchChats({ limit: 20 });
+
+// Raw API response
+const raw = await bot.fetchChatsRaw({ limit: 20 });
+
+// Fresh session (bypasses cache)
+const liveChats = await bot.fetchChatsLive({ limit: 20 });</code></pre>
+
+  <h3 id="sending-messages">3. Sending Messages</h3>
+  <p>Use the <code>bot.sender</code> to send text or media:</p>
+  <pre><code class="language-javascript">// Text message
+await bot.sender.sendMessage('Hello!', { chatId, dname: 'Bot' });
+
+// Using a Chat object
+await bot.sender.sendMessage('Hello!', { chat });
+
+// Send a file from disk
+await bot.sender.sendFile('/path/to/photo.jpg', 'Check this out!', { chatId });
+
+// Send a buffer
+await bot.sender.sendBuffer(buffer, 'doc.pdf', { chatId });</code></pre>
+
+  <h3 id="fetching-messages">4. Fetching Messages</h3>
+  <p>
+    The V2 messages API returns <strong>live, uncached</strong> data — perfect for bot polling:
+  </p>
+  <pre><code class="language-javascript">const messages = await bot.fetchMessages(chatId, { limit: 20 });
+
+for (const msg of messages) {
+  if (Bot.isMediaMessage(msg)) {
+    const info = Bot.getMediaInfo(msg);
+    console.log(`Media: ${info.fileName} (${info.mimeType})`);
+  } else {
+    console.log(`Text: ${msg.content?.text}`);
+  }
+}</code></pre>
+
+  <h3 id="media-download">5. Downloading Media</h3>
+  <pre><code class="language-javascript">// Download to buffer
+const { data, contentType } = await bot.downloadMedia(fileId, chatId);
+
+// Download to file
+await bot.downloadMediaToFile(fileId, chatId, './photo.jpg');
+
+// Get download URL only
+const url = bot.getMediaUrl(fileId, chatId);</code></pre>
+
+  <!-- API Reference -->
+  <h2 id="api-reference">API Reference</h2>
+  <p>Explore the full class documentation:</p>
+  <table>
+    <thead>
+      <tr><th>Class</th><th>Module</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="classes/ArattixBot.html">ArattixBot</a></td>
+        <td>Socket</td>
+        <td>Main entry point — creates sessions &amp; handles QR login</td>
+      </tr>
+      <tr>
+        <td><a href="classes/Bot.html">Bot</a></td>
+        <td>Socket</td>
+        <td>Authenticated client — chats, messages, media download</td>
+      </tr>
+      <tr>
+        <td><a href="classes/MessageSender.html">MessageSender</a></td>
+        <td>Socket</td>
+        <td>Send text messages and upload media files</td>
+      </tr>
+      <tr>
+        <td><a href="classes/Chat.html">Chat</a></td>
+        <td>Types</td>
+        <td>Structured chat data with participants &amp; messages</td>
+      </tr>
+      <tr>
+        <td><a href="classes/ChatManager.html">ChatManager</a></td>
+        <td>Types</td>
+        <td>Parses raw API response into Chat objects</td>
+      </tr>
+      <tr>
+        <td><a href="classes/Message.html">Message</a></td>
+        <td>Types</td>
+        <td>Message data model (v1 format)</td>
+      </tr>
+      <tr>
+        <td><a href="classes/MediaInfo.html">MediaInfo</a></td>
+        <td>Types</td>
+        <td>Media metadata with type detection &amp; helpers</td>
+      </tr>
+      <tr>
+        <td><a href="classes/Participant.html">Participant</a></td>
+        <td>Types</td>
+        <td>Chat participant with display name &amp; ID</td>
+      </tr>
+      <tr>
+        <td><a href="modules/Defaults.html">Defaults</a></td>
+        <td>Defaults</td>
+        <td>All API URLs, service names &amp; timeouts</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Footer -->
+  <div class="site-footer">
+    Arattix &copy; 2025 SafwanGanz — MIT License —
+    <a href="https://github.com/SafwanGanz/Arattix">GitHub</a>
+  </div>
+
+</main>
+
+<!-- ════════════════ TABLE OF CONTENTS ════════════════ -->
+<aside class="page-toc">
+  <div class="toc-title">On This Page</div>
+  <a href="#introduction">Introduction</a>
+  <a href="#features">Features</a>
+  <a href="#example">Quick Example</a>
+  <a href="#installation">Installation</a>
+  <a href="#structure">Project Structure</a>
+  <a href="#getting-started">Getting Started</a>
+  <a href="#authentication" class="toc-h3">Authentication</a>
+  <a href="#fetching-chats" class="toc-h3">Fetching Chats</a>
+  <a href="#sending-messages" class="toc-h3">Sending Messages</a>
+  <a href="#fetching-messages" class="toc-h3">Fetching Messages</a>
+  <a href="#media-download" class="toc-h3">Downloading Media</a>
+  <a href="#api-reference">API Reference</a>
+</aside>
+</div>
+
+<script>hljs.highlightAll();</script>
+<script src="assets/main.js"></script>
+</body>
+</html>

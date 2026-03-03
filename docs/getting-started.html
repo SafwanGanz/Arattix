@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started — Arattix Documentation</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+
+<nav class="site-sidebar">
+  <div class="sidebar-header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">A</div>
+      <span class="logo-text">Arattix</span>
+      <span class="logo-version">v1.0.0</span>
+    </a>
+  </div>
+  <div class="sidebar-nav">
+    <div class="sidebar-section"><div class="sidebar-section-title">Guide</div></div>
+    <a href="index.html">Introduction</a>
+    <a href="getting-started.html" class="active">Getting Started</a>
+    <a href="examples.html">Examples</a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Socket</div></div>
+    <a href="classes/ArattixBot.html">ArattixBot <span class="badge badge-class">C</span></a>
+    <a href="classes/Bot.html">Bot <span class="badge badge-class">C</span></a>
+    <a href="classes/MessageSender.html">MessageSender <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Types</div></div>
+    <a href="classes/Chat.html">Chat <span class="badge badge-class">C</span></a>
+    <a href="classes/ChatManager.html">ChatManager <span class="badge badge-class">C</span></a>
+    <a href="classes/Message.html">Message <span class="badge badge-class">C</span></a>
+    <a href="classes/MediaInfo.html">MediaInfo <span class="badge badge-class">C</span></a>
+    <a href="classes/Participant.html">Participant <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Other</div></div>
+    <a href="modules/Defaults.html">Defaults <span class="badge badge-const">D</span></a>
+    <a href="modules/Auth.html">Auth <span class="badge badge-fn">M</span></a>
+  </div>
+</nav>
+
+<div class="site-content">
+<main class="page-content">
+
+  <div class="breadcrumb">
+    <a href="index.html">arattix</a>
+    <span class="separator">›</span>
+    Getting Started
+  </div>
+
+  <h1>Getting Started</h1>
+  <p>
+    This guide walks you through setting up Arattix, authenticating, and building your first bot.
+  </p>
+
+  <!-- Prerequisites -->
+  <h2 id="prerequisites">Prerequisites</h2>
+  <ul>
+    <li><strong>Node.js</strong> version 14 or higher</li>
+    <li>An <strong>Arattai account</strong> with the mobile app installed</li>
+    <li>A terminal that supports QR code display (most modern terminals do)</li>
+  </ul>
+
+  <!-- Installation -->
+  <h2 id="installation">Installation</h2>
+  <div class="install-box">
+    <span class="prompt">$</span> npm install arattix
+  </div>
+  <p>Or install from source:</p>
+  <pre><code class="language-bash">git clone https://github.com/SafwanGanz/Arattix.git
+cd Arattix
+npm install</code></pre>
+
+  <!-- First Bot -->
+  <h2 id="first-bot">Your First Bot</h2>
+  <p>Create a file called <code>bot.js</code>:</p>
+  <pre><code class="language-javascript">const { ArattixBot } = require('arattix');
+
+async function main() {
+  // 1. Create the client
+  const arattix = new ArattixBot({ isShowQr: true });
+
+  // 2. Authenticate — scan the QR code with your Arattai app
+  const bot = await arattix.loginWithQr();
+
+  // 3. Set up CSRF token (required before API calls)
+  await bot.setupCsrf();
+
+  console.log('✅ Bot is ready!');
+
+  // 4. Fetch your chats
+  const chats = await bot.fetchChats({ limit: 10 });
+
+  for (const [chatId, chat] of Object.entries(chats)) {
+    console.log(`📋 ${chat.title} (${chatId})`);
+  }
+
+  // 5. Send a message to the first chat
+  const firstChat = Object.values(chats)[0];
+  if (firstChat) {
+    await bot.sender.sendMessage('Hello from Arattix! 🤖', {
+      chat: firstChat
+    });
+    console.log('✉️ Message sent!');
+  }
+}
+
+main().catch(console.error);</code></pre>
+
+  <p>Run it:</p>
+  <div class="install-box">
+    <span class="prompt">$</span> node bot.js
+  </div>
+
+  <div class="callout">
+    <strong>First run</strong>
+    On the first run, a QR code will appear in your terminal. Scan it with the Arattai mobile app.
+    Your session is saved to <code>cookies.json</code> and reused on subsequent runs.
+  </div>
+
+  <!-- Polling for Messages -->
+  <h2 id="polling">Polling for Messages</h2>
+  <p>
+    Arattix uses a polling approach to detect new messages. The V2 messages API returns live,
+    uncached data with zero delay.
+  </p>
+  <pre><code class="language-javascript">const POLL_INTERVAL = 3000; // 3 seconds
+const lastSeen = {};
+
+async function pollMessages(bot, chatId) {
+  const messages = await bot.fetchMessages(chatId, { limit: 10 });
+
+  for (const msg of messages) {
+    // Skip messages we've already seen
+    if (lastSeen[chatId] && msg.id <= lastSeen[chatId]) continue;
+
+    // Process new message
+    const text = msg.content?.text;
+    if (text) {
+      console.log(`[${msg.sender?.name}] ${text}`);
+
+      // Reply to /ping
+      if (text.startsWith('/ping')) {
+        await bot.sender.sendMessage('🏓 Pong!', {
+          chatId,
+          dname: 'Bot'
+        });
+      }
+    }
+  }
+
+  // Track last seen message
+  if (messages.length > 0) {
+    lastSeen[chatId] = messages[messages.length - 1].id;
+  }
+}
+
+// Poll every 3 seconds
+setInterval(() => pollMessages(bot, chatId), POLL_INTERVAL);</code></pre>
+
+  <!-- Working with Media -->
+  <h2 id="media">Working with Media</h2>
+
+  <h3 id="detect-media">Detecting Media Messages</h3>
+  <pre><code class="language-javascript">const { Bot, MediaInfo } = require('arattix');
+
+const messages = await bot.fetchMessages(chatId, { limit: 20 });
+
+for (const msg of messages) {
+  // Method 1: Using Bot static methods
+  if (Bot.isMediaMessage(msg)) {
+    const info = Bot.getMediaInfo(msg);
+    console.log(`${info.fileName} — ${info.mimeType} — ${info.size} bytes`);
+  }
+
+  // Method 2: Using MediaInfo class
+  const media = MediaInfo.from(msg);
+  if (media) {
+    console.log(media.toString());
+    // "🖼️ photo.jpg (image/jpeg, 190.7KB)"
+  }
+}</code></pre>
+
+  <h3 id="download-media">Downloading Media</h3>
+  <pre><code class="language-javascript">const fs = require('fs');
+
+// Download to buffer
+const { data, contentType } = await bot.downloadMedia(fileId, chatId);
+fs.writeFileSync(`./downloads/${fileName}`, data);
+
+// Or download directly to file
+await bot.downloadMediaToFile(fileId, chatId, './downloads/photo.jpg');
+
+// Download thumbnail only
+const thumb = await bot.downloadMedia(fileId, chatId, { thumbnail: true });</code></pre>
+
+  <h3 id="send-media">Sending Media</h3>
+  <pre><code class="language-javascript">// Send file from disk
+await bot.sender.sendImage('./photo.jpg', 'Nice photo!', { chatId });
+await bot.sender.sendDocument('./report.pdf', 'Monthly report', { chatId });
+
+// Send buffer (e.g. forwarding downloaded media)
+const { data } = await bot.downloadMedia(fileId, chatId);
+await bot.sender.sendBuffer(data, 'forwarded.jpg', {
+  chatId: otherChatId,
+  caption: 'Check this out!'
+});</code></pre>
+
+  <!-- Sessions -->
+  <h2 id="sessions">Session Management</h2>
+  <p>
+    Sessions are automatically managed. After the first QR scan, cookies are saved to
+    <code>cookies.json</code>. On subsequent runs, the saved session is tested and reused
+    if valid.
+  </p>
+  <pre><code class="language-text">First run:
+  1. No cookies.json found
+  2. QR code displayed → scan with app
+  3. Cookies saved to cookies.json
+  4. Bot is ready
+
+Subsequent runs:
+  1. cookies.json found
+  2. Session tested — still valid ✓
+  3. Bot is ready (no QR needed)</code></pre>
+
+  <div class="callout warning">
+    <strong>Session Expiry</strong>
+    If cookies expire, Arattix will automatically show a new QR code. Delete
+    <code>cookies.json</code> to force re-authentication.
+  </div>
+
+  <!-- Proxy -->
+  <h2 id="proxy">Using a Proxy</h2>
+  <pre><code class="language-javascript">const arattix = new ArattixBot({
+  isShowQr: true,
+  proxy: 'http://127.0.0.1:8080'
+});
+
+// All requests will go through the proxy
+const bot = await arattix.loginWithQr();</code></pre>
+
+  <!-- Next Steps -->
+  <h2 id="next-steps">Next Steps</h2>
+  <ul>
+    <li>Check out the <a href="examples.html">Examples</a> for complete bot implementations</li>
+    <li>See <a href="classes/Bot.html">Bot</a> for all available methods</li>
+    <li>Learn about <a href="classes/MediaInfo.html">MediaInfo</a> for media handling</li>
+    <li>Browse <a href="modules/Defaults.html">Defaults</a> for all API constants</li>
+  </ul>
+
+  <div class="site-footer">
+    Arattix &copy; 2025 SafwanGanz — MIT License —
+    <a href="https://github.com/SafwanGanz/Arattix">GitHub</a>
+  </div>
+
+</main>
+
+<aside class="page-toc">
+  <div class="toc-title">On This Page</div>
+  <a href="#prerequisites">Prerequisites</a>
+  <a href="#installation">Installation</a>
+  <a href="#first-bot">Your First Bot</a>
+  <a href="#polling">Polling for Messages</a>
+  <a href="#media">Working with Media</a>
+  <a href="#detect-media" class="toc-h3">Detecting Media</a>
+  <a href="#download-media" class="toc-h3">Downloading Media</a>
+  <a href="#send-media" class="toc-h3">Sending Media</a>
+  <a href="#sessions">Session Management</a>
+  <a href="#proxy">Using a Proxy</a>
+  <a href="#next-steps">Next Steps</a>
+</aside>
+</div>
+
+<script>hljs.highlightAll();</script>
+<script src="assets/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auth — Arattix Documentation</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+
+<nav class="site-sidebar">
+  <div class="sidebar-header">
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">A</div>
+      <span class="logo-text">Arattix</span>
+      <span class="logo-version">v1.0.0</span>
+    </a>
+  </div>
+  <div class="sidebar-nav">
+    <div class="sidebar-section"><div class="sidebar-section-title">Guide</div></div>
+    <a href="../index.html">Introduction</a>
+    <a href="../getting-started.html">Getting Started</a>
+    <a href="../examples.html">Examples</a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Socket</div></div>
+    <a href="../classes/ArattixBot.html">ArattixBot <span class="badge badge-class">C</span></a>
+    <a href="../classes/Bot.html">Bot <span class="badge badge-class">C</span></a>
+    <a href="../classes/MessageSender.html">MessageSender <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Types</div></div>
+    <a href="../classes/Chat.html">Chat <span class="badge badge-class">C</span></a>
+    <a href="../classes/ChatManager.html">ChatManager <span class="badge badge-class">C</span></a>
+    <a href="../classes/Message.html">Message <span class="badge badge-class">C</span></a>
+    <a href="../classes/MediaInfo.html">MediaInfo <span class="badge badge-class">C</span></a>
+    <a href="../classes/Participant.html">Participant <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Other</div></div>
+    <a href="Defaults.html">Defaults <span class="badge badge-const">D</span></a>
+    <a href="Auth.html" class="active">Auth <span class="badge badge-fn">M</span></a>
+  </div>
+</nav>
+
+<div class="site-content">
+<main class="page-content">
+
+  <div class="breadcrumb">
+    <a href="../index.html">arattix</a>
+    <span class="separator">›</span>
+    Auth
+  </div>
+
+  <h1>Module: Auth</h1>
+  <p>
+    The Auth module handles authentication with the Arattai platform. It includes QR code login,
+    session persistence, and token-based auth (placeholder for future use).
+  </p>
+  <p><strong>Source:</strong> <code>src/Auth/</code></p>
+
+  <h2 id="exports">Exports</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Source</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>QRLogin</code></td>
+        <td><code>Auth/qr-login.js</code></td>
+        <td>Handles QR code authentication flow</td>
+      </tr>
+      <tr>
+        <td><code>SessionManager</code></td>
+        <td><code>Auth/session-manager.js</code></td>
+        <td>Saves/loads session cookies to <code>cookies.json</code></td>
+      </tr>
+      <tr>
+        <td><code>TokenLogin</code></td>
+        <td><code>Auth/token-login.js</code></td>
+        <td>Token-based auth (placeholder for future implementation)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="qr-login">QRLogin</h2>
+  <p>
+    Initiates the QR code login flow. Fetches a QR code from the Arattai accounts server,
+    displays it in the terminal, and polls for the user to scan it.
+  </p>
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">new QRLogin(session)</span>
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>session</dt>
+        <dd><code>AxiosInstance</code> — Axios instance with cookie jar.</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">initiateLogin()</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">initiateLogin(): Promise&lt;object | null&gt;</div>
+    <div class="member-desc">
+      Starts the QR login flow. Returns the login response on success, or <code>null</code> on failure.
+    </div>
+  </div>
+
+  <h2 id="session-manager">SessionManager</h2>
+  <p>
+    Manages session persistence. Saves cookies to <code>cookies.json</code> after successful login
+    and tests cookie validity on startup to skip QR scanning if possible.
+  </p>
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">new SessionManager(session)</span>
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>session</dt>
+        <dd><code>AxiosInstance</code> — Axios instance with cookie jar.</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">testCookies()</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">testCookies(): Promise&lt;boolean&gt;</div>
+    <div class="member-desc">
+      Test if saved cookies are still valid. Returns <code>true</code> if the session can be reused.
+    </div>
+  </div>
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">saveSession()</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">saveSession(): Promise&lt;void&gt;</div>
+    <div class="member-desc">
+      Save current session cookies to <code>cookies.json</code>.
+    </div>
+  </div>
+
+  <h2 id="flow">Authentication Flow</h2>
+  <pre><code class="language-text">1. ArattixBot.loginWithQr() called
+2. SessionManager.testCookies() — check saved session
+   ├─ Valid → return Bot (skip QR)
+   └─ Invalid → continue
+3. QRLogin.initiateLogin() — fetch &amp; display QR code
+4. User scans QR with Arattai mobile app
+5. SessionManager.saveSession() — persist cookies
+6. Return authenticated Bot instance</code></pre>
+
+  <div class="callout">
+    <strong>Note</strong>
+    You typically don't use these classes directly. Use <a href="../classes/ArattixBot.html">ArattixBot.loginWithQr()</a>
+    which handles the full flow automatically.
+  </div>
+
+  <div class="site-footer">
+    Arattix &copy; 2025 SafwanGanz — MIT License —
+    <a href="https://github.com/SafwanGanz/Arattix">GitHub</a>
+  </div>
+
+</main>
+
+<aside class="page-toc">
+  <div class="toc-title">On This Page</div>
+  <a href="#exports">Exports</a>
+  <a href="#qr-login">QRLogin</a>
+  <a href="#session-manager">SessionManager</a>
+  <a href="#flow">Authentication Flow</a>
+</aside>
+</div>
+
+<script>hljs.highlightAll();</script>
+<script src="../assets/main.js"></script>
+</body>
+</html>

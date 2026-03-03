@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Participant — Arattix Documentation</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+
+<nav class="site-sidebar">
+  <div class="sidebar-header">
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">A</div>
+      <span class="logo-text">Arattix</span>
+      <span class="logo-version">v1.0.0</span>
+    </a>
+  </div>
+  <div class="sidebar-nav">
+    <div class="sidebar-section"><div class="sidebar-section-title">Guide</div></div>
+    <a href="../index.html">Introduction</a>
+    <a href="../getting-started.html">Getting Started</a>
+    <a href="../examples.html">Examples</a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Socket</div></div>
+    <a href="ArattixBot.html">ArattixBot <span class="badge badge-class">C</span></a>
+    <a href="Bot.html">Bot <span class="badge badge-class">C</span></a>
+    <a href="MessageSender.html">MessageSender <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Types</div></div>
+    <a href="Chat.html">Chat <span class="badge badge-class">C</span></a>
+    <a href="ChatManager.html">ChatManager <span class="badge badge-class">C</span></a>
+    <a href="Message.html">Message <span class="badge badge-class">C</span></a>
+    <a href="MediaInfo.html">MediaInfo <span class="badge badge-class">C</span></a>
+    <a href="Participant.html" class="active">Participant <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Other</div></div>
+    <a href="../modules/Defaults.html">Defaults <span class="badge badge-const">D</span></a>
+    <a href="../modules/Auth.html">Auth <span class="badge badge-fn">M</span></a>
+  </div>
+</nav>
+
+<div class="site-content">
+<main class="page-content">
+
+  <div class="breadcrumb">
+    <a href="../index.html">arattix</a>
+    <span class="separator">›</span>
+    <a href="../index.html#api-reference">Types</a>
+    <span class="separator">›</span>
+    Participant
+  </div>
+
+  <h1>Class: Participant</h1>
+  <p>
+    Represents a chat participant / user in the Arattai system. Each participant has a
+    display name and a zone user ID (ZUID).
+  </p>
+  <p><strong>Source:</strong> <code>src/Types/Participant.js</code></p>
+
+  <h2 id="constructor">Constructor</h2>
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">new Participant(dname, zuid)</span>
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>dname</dt>
+        <dd><code>string</code> — Display name of the user.</dd>
+        <dt>zuid</dt>
+        <dd><code>string</code> — Zone user ID.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <h2 id="properties">Properties</h2>
+  <table>
+    <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>dname</code></td><td><code>string</code></td><td>Display name</td></tr>
+      <tr><td><code>zuid</code></td><td><code>string</code></td><td>Zone user ID</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="methods">Methods</h2>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">getDname()</span>
+      <span class="member-tag tag-method">method</span>
+    </div>
+    <div class="member-sig">getDname(): string</div>
+    <div class="member-desc">Returns the participant's display name.</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">getZuid()</span>
+      <span class="member-tag tag-method">method</span>
+    </div>
+    <div class="member-sig">getZuid(): string</div>
+    <div class="member-desc">Returns the participant's zone user ID.</div>
+  </div>
+
+  <pre><code class="language-javascript">const chats = await bot.fetchChats();
+for (const [id, chat] of Object.entries(chats)) {
+  const owner = chat.getOwner();
+  console.log(`Chat: ${chat.title}`);
+  console.log(`Owner: ${owner.getDname()} (${owner.getZuid()})`);
+
+  for (const p of chat.getParticipants()) {
+    console.log(`  - ${p.getDname()} (${p.getZuid()})`);
+  }
+}</code></pre>
+
+  <div class="site-footer">
+    Arattix &copy; 2025 SafwanGanz — MIT License —
+    <a href="https://github.com/SafwanGanz/Arattix">GitHub</a>
+  </div>
+
+</main>
+
+<aside class="page-toc">
+  <div class="toc-title">On This Page</div>
+  <a href="#constructor">Constructor</a>
+  <a href="#properties">Properties</a>
+  <a href="#methods">Methods</a>
+</aside>
+</div>
+
+<script>hljs.highlightAll();</script>
+<script src="../assets/main.js"></script>
+</body>
+</html>

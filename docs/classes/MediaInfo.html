@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediaInfo — Arattix Documentation</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+
+<nav class="site-sidebar">
+  <div class="sidebar-header">
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">A</div>
+      <span class="logo-text">Arattix</span>
+      <span class="logo-version">v1.0.0</span>
+    </a>
+  </div>
+  <div class="sidebar-nav">
+    <div class="sidebar-section"><div class="sidebar-section-title">Guide</div></div>
+    <a href="../index.html">Introduction</a>
+    <a href="../getting-started.html">Getting Started</a>
+    <a href="../examples.html">Examples</a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Socket</div></div>
+    <a href="ArattixBot.html">ArattixBot <span class="badge badge-class">C</span></a>
+    <a href="Bot.html">Bot <span class="badge badge-class">C</span></a>
+    <a href="MessageSender.html">MessageSender <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Types</div></div>
+    <a href="Chat.html">Chat <span class="badge badge-class">C</span></a>
+    <a href="ChatManager.html">ChatManager <span class="badge badge-class">C</span></a>
+    <a href="Message.html">Message <span class="badge badge-class">C</span></a>
+    <a href="MediaInfo.html" class="active">MediaInfo <span class="badge badge-class">C</span></a>
+    <a href="Participant.html">Participant <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Other</div></div>
+    <a href="../modules/Defaults.html">Defaults <span class="badge badge-const">D</span></a>
+    <a href="../modules/Auth.html">Auth <span class="badge badge-fn">M</span></a>
+  </div>
+</nav>
+
+<div class="site-content">
+<main class="page-content">
+
+  <div class="breadcrumb">
+    <a href="../index.html">arattix</a>
+    <span class="separator">›</span>
+    <a href="../index.html#api-reference">Types</a>
+    <span class="separator">›</span>
+    MediaInfo
+  </div>
+
+  <h1>Class: MediaInfo</h1>
+  <p>
+    Represents media metadata extracted from a V2 file message. Provides convenient getters
+    for type detection, file size formatting, and display.
+  </p>
+  <p><strong>Source:</strong> <code>src/Types/Message.js</code></p>
+
+  <!-- Constructor -->
+  <h2 id="constructor">Constructor</h2>
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">new MediaInfo(raw)</span>
+    </div>
+    <div class="member-sig">constructor(raw: object)</div>
+    <div class="member-desc">
+      Creates a MediaInfo from a raw V2 message with <code>type: "file"</code>.
+      Prefer using the static <code>MediaInfo.from(msg)</code> factory method.
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>raw</dt>
+        <dd><code>object</code> — Raw V2 message object.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <h2 id="static">Static Methods</h2>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">MediaInfo.from(msg)</span>
+      <span class="member-tag tag-static">static</span>
+    </div>
+    <div class="member-sig">static from(msg: object): MediaInfo | null</div>
+    <div class="member-desc">
+      Create a MediaInfo from a raw V2 message, or return <code>null</code> if the message
+      is not a file message. This is the recommended way to create MediaInfo instances.
+    </div>
+  </div>
+
+  <pre><code class="language-javascript">const { MediaInfo } = require('arattix');
+
+const messages = await bot.fetchMessages(chatId);
+for (const msg of messages) {
+  const media = MediaInfo.from(msg);
+  if (media) {
+    console.log(media.toString());
+    // "🖼️ photo.jpg (image/jpeg, 190.7KB)"
+  }
+}</code></pre>
+
+  <!-- Properties -->
+  <h2 id="properties">Properties</h2>
+  <table>
+    <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>fileId</code></td><td><code>string | null</code></td><td>File ID for download</td></tr>
+      <tr><td><code>fileName</code></td><td><code>string</code></td><td>Original file name</td></tr>
+      <tr><td><code>mimeType</code></td><td><code>string</code></td><td>MIME type (e.g. <code>"image/jpeg"</code>)</td></tr>
+      <tr><td><code>size</code></td><td><code>number</code></td><td>File size in bytes</td></tr>
+      <tr><td><code>width</code></td><td><code>number</code></td><td>Image/video width in pixels</td></tr>
+      <tr><td><code>height</code></td><td><code>number</code></td><td>Image/video height in pixels</td></tr>
+      <tr><td><code>thumbnail</code></td><td><code>object | null</code></td><td>Thumbnail data (height, width, blur_data)</td></tr>
+      <tr><td><code>raw</code></td><td><code>object</code></td><td>The original raw V2 message</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Getters -->
+  <h2 id="getters">Getters</h2>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">isImage</span>
+      <span class="member-tag tag-getter">getter</span>
+    </div>
+    <div class="member-sig">get isImage(): boolean</div>
+    <div class="member-desc">True if MIME type starts with <code>image/</code>.</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">isAudio</span>
+      <span class="member-tag tag-getter">getter</span>
+    </div>
+    <div class="member-sig">get isAudio(): boolean</div>
+    <div class="member-desc">True if MIME type starts with <code>audio/</code>.</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">isVideo</span>
+      <span class="member-tag tag-getter">getter</span>
+    </div>
+    <div class="member-sig">get isVideo(): boolean</div>
+    <div class="member-desc">True if MIME type starts with <code>video/</code>.</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">isDocument</span>
+      <span class="member-tag tag-getter">getter</span>
+    </div>
+    <div class="member-sig">get isDocument(): boolean</div>
+    <div class="member-desc">True if not image, audio, or video.</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">sizeKB</span>
+      <span class="member-tag tag-getter">getter</span>
+    </div>
+    <div class="member-sig">get sizeKB(): string</div>
+    <div class="member-desc">File size in KB (1 decimal place).</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">sizeMB</span>
+      <span class="member-tag tag-getter">getter</span>
+    </div>
+    <div class="member-sig">get sizeMB(): string</div>
+    <div class="member-desc">File size in MB (2 decimal places).</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">typeIcon</span>
+      <span class="member-tag tag-getter">getter</span>
+    </div>
+    <div class="member-sig">get typeIcon(): string</div>
+    <div class="member-desc">Returns an emoji icon: 🖼️ image, 🎵 audio, 🎬 video, 📄 document.</div>
+  </div>
+
+  <!-- Methods -->
+  <h2 id="methods">Methods</h2>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">toString()</span>
+      <span class="member-tag tag-method">method</span>
+    </div>
+    <div class="member-sig">toString(): string</div>
+    <div class="member-desc">
+      Returns a human-readable string like <code>"🖼️ photo.jpg (image/jpeg, 190.7KB)"</code>.
+    </div>
+  </div>
+
+  <!-- v2 File Message Format -->
+  <h2 id="format">V2 File Message Format</h2>
+  <p>This is the raw structure that MediaInfo parses from the V2 API:</p>
+  <pre><code class="language-json">{
+  "type": "file",
+  "content": {
+    "thumbnail": {
+      "height": "195",
+      "width": "400",
+      "blur_data": "/9j/..."
+    },
+    "file": {
+      "name": "photo.jpg",
+      "type": "image/jpeg",
+      "dimensions": {
+        "height": 625,
+        "tnheight": 195,
+        "size": 195287,
+        "tnwidth": 400,
+        "width": 1280
+      },
+      "id": "i5b22..."
+    }
+  }
+}</code></pre>
+
+  <!-- Full Example -->
+  <h2 id="example">Complete Example</h2>
+  <pre><code class="language-javascript">const { ArattixBot, Bot, MediaInfo } = require('arattix');
+
+async function main() {
+  const arattix = new ArattixBot();
+  const bot = await arattix.loginWithQr();
+  await bot.setupCsrf();
+
+  const messages = await bot.fetchMessages(chatId, { limit: 50 });
+
+  for (const msg of messages) {
+    const media = MediaInfo.from(msg);
+    if (media) {
+      console.log(`${media.typeIcon} ${media.fileName}`);
+      console.log(`   MIME: ${media.mimeType}`);
+      console.log(`   Size: ${media.sizeKB} KB`);
+      console.log(`   Dimensions: ${media.width}x${media.height}`);
+
+      // Download
+      const { data } = await bot.downloadMedia(media.fileId, chatId);
+      fs.writeFileSync(`./downloads/${media.fileName}`, data);
+
+      // Forward to another chat
+      await bot.sender.sendBuffer(data, media.fileName, {
+        chatId: otherChatId,
+        caption: `Forwarded: ${media.fileName}`
+      });
+    }
+  }
+}
+
+main();</code></pre>
+
+  <div class="site-footer">
+    Arattix &copy; 2025 SafwanGanz — MIT License —
+    <a href="https://github.com/SafwanGanz/Arattix">GitHub</a>
+  </div>
+
+</main>
+
+<aside class="page-toc">
+  <div class="toc-title">On This Page</div>
+  <a href="#constructor">Constructor</a>
+  <a href="#static">Static Methods</a>
+  <a href="#properties">Properties</a>
+  <a href="#getters">Getters</a>
+  <a href="#methods">Methods</a>
+  <a href="#format">V2 File Message Format</a>
+  <a href="#example">Complete Example</a>
+</aside>
+</div>
+
+<script>hljs.highlightAll();</script>
+<script src="../assets/main.js"></script>
+</body>
+</html>

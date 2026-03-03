@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bot — Arattix Documentation</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+
+<nav class="site-sidebar">
+  <div class="sidebar-header">
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">A</div>
+      <span class="logo-text">Arattix</span>
+      <span class="logo-version">v1.0.0</span>
+    </a>
+  </div>
+  <div class="sidebar-nav">
+    <div class="sidebar-section"><div class="sidebar-section-title">Guide</div></div>
+    <a href="../index.html">Introduction</a>
+    <a href="../getting-started.html">Getting Started</a>
+    <a href="../examples.html">Examples</a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Socket</div></div>
+    <a href="ArattixBot.html">ArattixBot <span class="badge badge-class">C</span></a>
+    <a href="Bot.html" class="active">Bot <span class="badge badge-class">C</span></a>
+    <a href="MessageSender.html">MessageSender <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Types</div></div>
+    <a href="Chat.html">Chat <span class="badge badge-class">C</span></a>
+    <a href="ChatManager.html">ChatManager <span class="badge badge-class">C</span></a>
+    <a href="Message.html">Message <span class="badge badge-class">C</span></a>
+    <a href="MediaInfo.html">MediaInfo <span class="badge badge-class">C</span></a>
+    <a href="Participant.html">Participant <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Other</div></div>
+    <a href="../modules/Defaults.html">Defaults <span class="badge badge-const">D</span></a>
+    <a href="../modules/Auth.html">Auth <span class="badge badge-fn">M</span></a>
+  </div>
+</nav>
+
+<div class="site-content">
+<main class="page-content">
+
+  <div class="breadcrumb">
+    <a href="../index.html">arattix</a>
+    <span class="separator">›</span>
+    <a href="../index.html#api-reference">Socket</a>
+    <span class="separator">›</span>
+    Bot
+  </div>
+
+  <h1>Class: Bot</h1>
+  <p>
+    Authenticated bot instance returned by <a href="ArattixBot.html">ArattixBot.loginWithQr()</a>.
+    Provides methods for fetching chats, reading messages, downloading media, and accessing the
+    <a href="MessageSender.html">MessageSender</a>.
+  </p>
+  <p><strong>Source:</strong> <code>src/Socket/bot.js</code></p>
+
+  <!-- Constructor -->
+  <h2 id="constructor">Constructor</h2>
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">new Bot(session)</span>
+    </div>
+    <div class="member-sig">constructor(session: AxiosInstance)</div>
+    <div class="member-desc">
+      Creates a Bot with the given authenticated axios session. Normally you don't construct this
+      directly — use <a href="ArattixBot.html">ArattixBot.loginWithQr()</a> instead.
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>session</dt>
+        <dd><code>AxiosInstance</code> — Axios instance with cookie jar support.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Properties -->
+  <h2 id="properties">Properties</h2>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">session</span>
+      <span class="member-tag tag-property">property</span>
+    </div>
+    <div class="member-sig">AxiosInstance</div>
+    <div class="member-desc">The authenticated axios session with cookie jar.</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">chats</span>
+      <span class="member-tag tag-property">property</span>
+    </div>
+    <div class="member-sig">Array</div>
+    <div class="member-desc">Cached chat list. Initially empty <code>[]</code>.</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">sender</span>
+      <span class="member-tag tag-getter">getter</span>
+    </div>
+    <div class="member-sig">get sender(): <a href="MessageSender.html">MessageSender</a></div>
+    <div class="member-desc">
+      Returns a <a href="MessageSender.html">MessageSender</a> instance bound to this session.
+    </div>
+  </div>
+
+  <!-- CSRF -->
+  <h2 id="csrf">CSRF Setup</h2>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">setupCsrf()</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">setupCsrf(): Promise&lt;void&gt;</div>
+    <div class="member-desc">
+      Call this <strong>once after login</strong> before using other API methods. Fetches the
+      <code>CT_CSRF_TOKEN</code> cookie and sets the <code>X-ZCSRF-TOKEN</code> header on the session.
+    </div>
+  </div>
+
+  <pre><code class="language-javascript">const bot = await arattix.loginWithQr();
+await bot.setupCsrf(); // Required before API calls</code></pre>
+
+  <!-- Chat Methods -->
+  <h2 id="chats">Chat Methods</h2>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">fetchChats(options?)</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">fetchChats({ pinned?, limit? }): Promise&lt;Object.&lt;string, <a href="Chat.html">Chat</a>&gt;&gt;</div>
+    <div class="member-desc">
+      Fetch the chat list and return parsed <a href="Chat.html">Chat</a> objects keyed by chat ID.
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>options.pinned</dt>
+        <dd><code>boolean</code> — Fetch pinned chats only. Default: <code>false</code></dd>
+        <dt>options.limit</dt>
+        <dd><code>number</code> — Maximum number of chats. Default: <code>20</code></dd>
+        <dt>Returns</dt>
+        <dd><code>Promise&lt;Object&lt;string, Chat&gt;&gt;</code> — Map of chatId → Chat</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">fetchChatsRaw(options?)</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">fetchChatsRaw({ limit? }): Promise&lt;Object&gt;</div>
+    <div class="member-desc">
+      Fetch the raw (unparsed) chat API response. Useful for debugging or accessing fields not in the Chat model.
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>options.limit</dt>
+        <dd><code>number</code> — Default: <code>20</code></dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">fetchChatsLive(options?)</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">fetchChatsLive({ limit? }): Promise&lt;Object.&lt;string, <a href="Chat.html">Chat</a>&gt;&gt;</div>
+    <div class="member-desc">
+      Fetch chats using a <strong>fresh session</strong>, bypassing server-side session caching.
+      Guarantees up-to-date data.
+    </div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">fetchChatsLiveRaw(options?)</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">fetchChatsLiveRaw({ limit? }): Promise&lt;Object&gt;</div>
+    <div class="member-desc">
+      Fresh session + raw response combined.
+    </div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">fetchChatDetails(chatId, options?)</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">fetchChatDetails(chatId: string, { limit? }): Promise&lt;Object | null&gt;</div>
+    <div class="member-desc">
+      Fetch detailed info for a specific chat. Returns <code>null</code> on error.
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>chatId</dt>
+        <dd><code>string</code> — The chat ID to look up.</dd>
+        <dt>options.limit</dt>
+        <dd><code>number</code> — Default: <code>50</code></dd>
+      </dl>
+    </div>
+  </div>
+
+  <pre><code class="language-javascript">// Get parsed chats
+const chats = await bot.fetchChats({ limit: 10 });
+for (const [id, chat] of Object.entries(chats)) {
+  console.log(`${chat.title} — ${id}`);
+}
+
+// Get raw API data
+const raw = await bot.fetchChatsRaw();
+console.log(raw.data.chats.length);
+
+// Live (fresh session, no cache)
+const live = await bot.fetchChatsLive({ limit: 5 });</code></pre>
+
+  <!-- Message Methods -->
+  <h2 id="messages">Message Methods</h2>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">fetchMessages(chatId, options?)</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">fetchMessages(chatId: string, { limit? }): Promise&lt;Array&gt;</div>
+    <div class="member-desc">
+      Fetch messages for a specific chat using the <strong>V2 API</strong>. Returns live, uncached data,
+      sorted oldest-first. Each message object includes <code>id</code>, <code>type</code>,
+      <code>content</code>, <code>sender</code>, and <code>time</code>.
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>chatId</dt>
+        <dd><code>string</code> — The chat ID.</dd>
+        <dt>options.limit</dt>
+        <dd><code>number</code> — Max messages to fetch. Default: <code>20</code></dd>
+        <dt>Returns</dt>
+        <dd><code>Promise&lt;Array&gt;</code> — Array of v2 message objects.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <pre><code class="language-javascript">const messages = await bot.fetchMessages(chatId, { limit: 50 });
+for (const msg of messages) {
+  console.log(`[${msg.sender?.name}] ${msg.content?.text || '(media)'}`);
+}</code></pre>
+
+  <!-- Media Methods -->
+  <h2 id="media">Media Methods</h2>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">downloadMedia(fileId, chatId, options?)</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">downloadMedia(fileId, chatId, { thumbnail? }): Promise&lt;{ data: Buffer, contentType: string, fileName: string | null }&gt;</div>
+    <div class="member-desc">
+      Download a media file as a Buffer. Tries the primary UDS download endpoint first, then falls
+      back to the v1 attachments endpoint.
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>fileId</dt>
+        <dd><code>string</code> — The file ID from <code>message.content.file.id</code></dd>
+        <dt>chatId</dt>
+        <dd><code>string</code> — The chat ID the file belongs to.</dd>
+        <dt>options.thumbnail</dt>
+        <dd><code>boolean</code> — Download thumbnail instead. Default: <code>false</code></dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">downloadMediaToFile(fileId, chatId, outputPath, options?)</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">downloadMediaToFile(fileId, chatId, outputPath, { thumbnail? }): Promise&lt;{ path: string, contentType: string, size: number }&gt;</div>
+    <div class="member-desc">
+      Download media and save it directly to a file on disk.
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>outputPath</dt>
+        <dd><code>string</code> — File path to save to.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">getMediaUrl(fileId, chatId, options?)</span>
+      <span class="member-tag tag-method">method</span>
+    </div>
+    <div class="member-sig">getMediaUrl(fileId, chatId, { thumbnail? }): string</div>
+    <div class="member-desc">
+      Get the download URL for a media file without downloading it.
+      Useful for passing to external tools or streaming.
+    </div>
+  </div>
+
+  <pre><code class="language-javascript">// Download to buffer
+const { data, contentType } = await bot.downloadMedia(fileId, chatId);
+console.log(`Downloaded ${data.length} bytes (${contentType})`);
+
+// Save to disk
+const result = await bot.downloadMediaToFile(fileId, chatId, './photo.jpg');
+console.log(`Saved to ${result.path} (${result.size} bytes)`);
+
+// Get URL only
+const url = bot.getMediaUrl(fileId, chatId);
+console.log(url);</code></pre>
+
+  <!-- Static Methods -->
+  <h2 id="static">Static Methods</h2>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">Bot.isMediaMessage(msg)</span>
+      <span class="member-tag tag-static">static</span>
+    </div>
+    <div class="member-sig">static isMediaMessage(msg: object): boolean</div>
+    <div class="member-desc">
+      Check if a V2 message contains media (type <code>"file"</code> with a file object).
+    </div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">Bot.getMediaInfo(msg)</span>
+      <span class="member-tag tag-static">static</span>
+    </div>
+    <div class="member-sig">static getMediaInfo(msg: object): object | null</div>
+    <div class="member-desc">
+      Extract structured media info from a V2 file message. Returns an object with
+      <code>fileId</code>, <code>fileName</code>, <code>mimeType</code>, <code>size</code>,
+      <code>isImage</code>, <code>isAudio</code>, <code>isVideo</code>, <code>isDocument</code>,
+      <code>thumbnail</code>, and <code>dimensions</code>. Returns <code>null</code> if the
+      message is not a media message.
+    </div>
+  </div>
+
+  <pre><code class="language-javascript">for (const msg of messages) {
+  if (Bot.isMediaMessage(msg)) {
+    const info = Bot.getMediaInfo(msg);
+    console.log(`📁 ${info.fileName} (${info.mimeType})`);
+    console.log(`   Size: ${info.size} bytes`);
+    console.log(`   Type: image=${info.isImage} audio=${info.isAudio}`);
+
+    // Download it
+    const { data } = await bot.downloadMedia(info.fileId, chatId);
+  }
+}</code></pre>
+
+  <div class="site-footer">
+    Arattix &copy; 2025 SafwanGanz — MIT License —
+    <a href="https://github.com/SafwanGanz/Arattix">GitHub</a>
+  </div>
+
+</main>
+
+<aside class="page-toc">
+  <div class="toc-title">On This Page</div>
+  <a href="#constructor">Constructor</a>
+  <a href="#properties">Properties</a>
+  <a href="#csrf">CSRF Setup</a>
+  <a href="#chats">Chat Methods</a>
+  <a href="#messages">Message Methods</a>
+  <a href="#media">Media Methods</a>
+  <a href="#static">Static Methods</a>
+</aside>
+</div>
+
+<script>hljs.highlightAll();</script>
+<script src="../assets/main.js"></script>
+</body>
+</html>

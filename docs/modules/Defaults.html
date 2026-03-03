@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Defaults — Arattix Documentation</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+
+<nav class="site-sidebar">
+  <div class="sidebar-header">
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">A</div>
+      <span class="logo-text">Arattix</span>
+      <span class="logo-version">v1.0.0</span>
+    </a>
+  </div>
+  <div class="sidebar-nav">
+    <div class="sidebar-section"><div class="sidebar-section-title">Guide</div></div>
+    <a href="../index.html">Introduction</a>
+    <a href="../getting-started.html">Getting Started</a>
+    <a href="../examples.html">Examples</a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Socket</div></div>
+    <a href="../classes/ArattixBot.html">ArattixBot <span class="badge badge-class">C</span></a>
+    <a href="../classes/Bot.html">Bot <span class="badge badge-class">C</span></a>
+    <a href="../classes/MessageSender.html">MessageSender <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Types</div></div>
+    <a href="../classes/Chat.html">Chat <span class="badge badge-class">C</span></a>
+    <a href="../classes/ChatManager.html">ChatManager <span class="badge badge-class">C</span></a>
+    <a href="../classes/Message.html">Message <span class="badge badge-class">C</span></a>
+    <a href="../classes/MediaInfo.html">MediaInfo <span class="badge badge-class">C</span></a>
+    <a href="../classes/Participant.html">Participant <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Other</div></div>
+    <a href="Defaults.html" class="active">Defaults <span class="badge badge-const">D</span></a>
+    <a href="Auth.html">Auth <span class="badge badge-fn">M</span></a>
+  </div>
+</nav>
+
+<div class="site-content">
+<main class="page-content">
+
+  <div class="breadcrumb">
+    <a href="../index.html">arattix</a>
+    <span class="separator">›</span>
+    Defaults
+  </div>
+
+  <h1>Module: Defaults</h1>
+  <p>
+    Centralized configuration constants used throughout the library. Contains all API URLs,
+    service names, timeouts, and default values.
+  </p>
+  <p><strong>Source:</strong> <code>src/Defaults/index.js</code></p>
+
+  <pre><code class="language-javascript">const { Defaults } = require('arattix');
+console.log(Defaults.CHAT_API);
+// "https://web.arattai.in/v1/chats"</code></pre>
+
+  <!-- URLs -->
+  <h2 id="urls">Base URLs</h2>
+  <table>
+    <thead><tr><th>Constant</th><th>Value</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>WEB_BASE_URL</code></td>
+        <td><code>"https://web.arattai.in"</code></td>
+        <td>Web app base URL</td>
+      </tr>
+      <tr>
+        <td><code>ACCOUNTS_BASE_URL</code></td>
+        <td><code>"https://accounts.arattai.in"</code></td>
+        <td>Auth server base URL</td>
+      </tr>
+      <tr>
+        <td><code>FILES_BASE_URL</code></td>
+        <td><code>"https://files.arattai.in"</code></td>
+        <td>File server base URL</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- API Endpoints -->
+  <h2 id="endpoints">API Endpoints</h2>
+  <table>
+    <thead><tr><th>Constant</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>CHAT_API</code></td>
+        <td><code>string</code></td>
+        <td>V1 Chat list endpoint: <code>https://web.arattai.in/v1/chats</code></td>
+      </tr>
+      <tr>
+        <td><code>MESSAGES_API(chatId)</code></td>
+        <td><code>function</code></td>
+        <td>V2 Messages endpoint — returns live data</td>
+      </tr>
+      <tr>
+        <td><code>SEND_MESSAGE_URL</code></td>
+        <td><code>string</code></td>
+        <td>Send text message endpoint</td>
+      </tr>
+      <tr>
+        <td><code>FILE_UPLOAD_URL</code></td>
+        <td><code>string</code></td>
+        <td>File upload endpoint</td>
+      </tr>
+      <tr>
+        <td><code>FILE_DOWNLOAD_URL</code></td>
+        <td><code>string</code></td>
+        <td>UDS file download endpoint</td>
+      </tr>
+      <tr>
+        <td><code>ATTACHMENTS_URL(fileId)</code></td>
+        <td><code>function</code></td>
+        <td>V1 attachments fallback download</td>
+      </tr>
+      <tr>
+        <td><code>QR_AUTH_URL</code></td>
+        <td><code>string</code></td>
+        <td>QR code auth endpoint</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <pre><code class="language-javascript">// Dynamic URL functions:
+const url = Defaults.MESSAGES_API('chat_12345');
+// "https://web.arattai.in/v2/chats/chat_12345/messages"
+
+const dlUrl = Defaults.ATTACHMENTS_URL('file_abc');
+// "https://web.arattai.in/v1/attachments/file_abc"</code></pre>
+
+  <!-- Service Names -->
+  <h2 id="services">Service Names</h2>
+  <table>
+    <thead><tr><th>Constant</th><th>Value</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>DOWNLOAD_SERVICE</code></td>
+        <td><code>"CLIQ"</code></td>
+        <td>x-service header for downloads. <strong>Must be "CLIQ"</strong></td>
+      </tr>
+      <tr>
+        <td><code>UPLOAD_SERVICE</code></td>
+        <td><code>"arattai"</code></td>
+        <td>x-service header for uploads</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout warning">
+    <strong>Important</strong>
+    The <code>DOWNLOAD_SERVICE</code> must be <code>"CLIQ"</code> — using <code>"arattai"</code>
+    for downloads will return 403 errors. This is a backend requirement of the file server.
+  </div>
+
+  <!-- Defaults -->
+  <h2 id="defaults">Default Values</h2>
+  <table>
+    <thead><tr><th>Constant</th><th>Value</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>DEFAULT_USER_AGENT</code></td>
+        <td><code>string</code></td>
+        <td>Chrome-based User-Agent string</td>
+      </tr>
+      <tr>
+        <td><code>DEFAULT_TIMEOUT</code></td>
+        <td><code>10000</code></td>
+        <td>Default request timeout (10s)</td>
+      </tr>
+      <tr>
+        <td><code>MEDIA_TIMEOUT</code></td>
+        <td><code>30000</code></td>
+        <td>Media download/upload timeout (30s)</td>
+      </tr>
+      <tr>
+        <td><code>DEFAULT_POLL_INTERVAL</code></td>
+        <td><code>3000</code></td>
+        <td>Default bot polling interval (3s)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="site-footer">
+    Arattix &copy; 2025 SafwanGanz — MIT License —
+    <a href="https://github.com/SafwanGanz/Arattix">GitHub</a>
+  </div>
+
+</main>
+
+<aside class="page-toc">
+  <div class="toc-title">On This Page</div>
+  <a href="#urls">Base URLs</a>
+  <a href="#endpoints">API Endpoints</a>
+  <a href="#services">Service Names</a>
+  <a href="#defaults">Default Values</a>
+</aside>
+</div>
+
+<script>hljs.highlightAll();</script>
+<script src="../assets/main.js"></script>
+</body>
+</html>

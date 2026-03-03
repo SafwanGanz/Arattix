@@ -1,4 +1,31 @@
+# Dependencies
 node_modules/
+
+# Session data (sensitive)
 cookies.json
 headers.json
+
+# Downloads
+downloads/
+
+# Debug / test artifacts
 *.log
+diff-log.txt
+raw-debug.json
+endpoint-results.json
+test-*.json
+v2-*.json
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build
+dist/

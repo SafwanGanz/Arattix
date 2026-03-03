@@ -1,8 +1,9 @@
 const axios = require('axios');
 const { wrapper } = require('axios-cookiejar-support');
 const { CookieJar } = require('tough-cookie');
-const { QRLogin, SessionManager } = require('./auth');
-const Bot = require('./models/bot');
+const { QRLogin, SessionManager } = require('../Auth');
+const Bot = require('./bot');
+const Defaults = require('../Defaults');
 
 /**
  * Main entry point for the Arattix library.
@@ -11,27 +12,22 @@ const Bot = require('./models/bot');
 class ArattixBot {
   /**
    * @param {object} [options]
-   * @param {boolean} [options.isShowQr=true] - Whether to display the QR code in the terminal.
-   * @param {string|null} [options.proxy=null] - Optional HTTP proxy URL (e.g. "http://127.0.0.1:8888").
+   * @param {boolean} [options.isShowQr=true] - Display QR code in terminal.
+   * @param {string|null} [options.proxy=null] - HTTP proxy URL.
    */
   constructor({ isShowQr = true, proxy = null } = {}) {
     this.isShowQr = isShowQr;
     this.token = null;
 
-    // Create a cookie-jar-aware axios instance
     const jar = new CookieJar();
-
     const axiosConfig = {
       jar,
       withCredentials: true,
-      headers: {
-        common: {},
-      },
+      headers: { common: {} },
     };
 
     if (proxy) {
-      // Support proxy via environment or axios-level config
-      axiosConfig.proxy = false; // disable default proxy detection
+      axiosConfig.proxy = false;
       const { HttpsProxyAgent } = require('https-proxy-agent');
       axiosConfig.httpsAgent = new HttpsProxyAgent(proxy);
     }
@@ -41,7 +37,7 @@ class ArattixBot {
 
   /**
    * Authenticate using QR code login.
-   * If a saved session is valid, it reuses it. Otherwise, starts QR login flow.
+   * Reuses saved session if valid.
    * @returns {Promise<Bot>} An authenticated Bot instance.
    */
   async loginWithQr() {

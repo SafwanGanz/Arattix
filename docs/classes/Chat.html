@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat — Arattix Documentation</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+
+<nav class="site-sidebar">
+  <div class="sidebar-header">
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">A</div>
+      <span class="logo-text">Arattix</span>
+      <span class="logo-version">v1.0.0</span>
+    </a>
+  </div>
+  <div class="sidebar-nav">
+    <div class="sidebar-section"><div class="sidebar-section-title">Guide</div></div>
+    <a href="../index.html">Introduction</a>
+    <a href="../getting-started.html">Getting Started</a>
+    <a href="../examples.html">Examples</a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Socket</div></div>
+    <a href="ArattixBot.html">ArattixBot <span class="badge badge-class">C</span></a>
+    <a href="Bot.html">Bot <span class="badge badge-class">C</span></a>
+    <a href="MessageSender.html">MessageSender <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Types</div></div>
+    <a href="Chat.html" class="active">Chat <span class="badge badge-class">C</span></a>
+    <a href="ChatManager.html">ChatManager <span class="badge badge-class">C</span></a>
+    <a href="Message.html">Message <span class="badge badge-class">C</span></a>
+    <a href="MediaInfo.html">MediaInfo <span class="badge badge-class">C</span></a>
+    <a href="Participant.html">Participant <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Other</div></div>
+    <a href="../modules/Defaults.html">Defaults <span class="badge badge-const">D</span></a>
+    <a href="../modules/Auth.html">Auth <span class="badge badge-fn">M</span></a>
+  </div>
+</nav>
+
+<div class="site-content">
+<main class="page-content">
+
+  <div class="breadcrumb">
+    <a href="../index.html">arattix</a>
+    <span class="separator">›</span>
+    <a href="../index.html#api-reference">Types</a>
+    <span class="separator">›</span>
+    Chat
+  </div>
+
+  <h1>Class: Chat</h1>
+  <p>
+    Represents a single chat with its metadata, participants, and messages.
+    Returned by <a href="Bot.html#chats">Bot.fetchChats()</a> and
+    <a href="ChatManager.html">ChatManager.parseChatData()</a>.
+  </p>
+  <p><strong>Source:</strong> <code>src/Types/Chat.js</code></p>
+
+  <!-- Constructor -->
+  <h2 id="constructor">Constructor</h2>
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">new Chat(chatId, title, owner, participants, message, lastmsguid)</span>
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>chatId</dt>
+        <dd><code>string</code> — Chat identifier.</dd>
+        <dt>title</dt>
+        <dd><code>string</code> — Chat title / name.</dd>
+        <dt>owner</dt>
+        <dd><code><a href="Participant.html">Participant</a></code> — Chat owner.</dd>
+        <dt>participants</dt>
+        <dd><code>Participant[]</code> — Array of participants.</dd>
+        <dt>message</dt>
+        <dd><code><a href="Message.html">Message</a> | Message[] | null</code> — Last message(s).</dd>
+        <dt>lastmsguid</dt>
+        <dd><code>string | null</code> — Last message UID.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Properties -->
+  <h2 id="properties">Properties</h2>
+  <table>
+    <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>chatId</code></td><td><code>string</code></td><td>Chat identifier</td></tr>
+      <tr><td><code>title</code></td><td><code>string</code></td><td>Chat title</td></tr>
+      <tr><td><code>owner</code></td><td><code>Participant</code></td><td>Chat owner</td></tr>
+      <tr><td><code>participants</code></td><td><code>Participant[]</code></td><td>All participants</td></tr>
+      <tr><td><code>message</code></td><td><code>Message | Message[]</code></td><td>Last message(s)</td></tr>
+      <tr><td><code>lastmsguid</code></td><td><code>string | null</code></td><td>Last message UID</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Methods -->
+  <h2 id="methods">Methods</h2>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">getChatId()</span>
+      <span class="member-tag tag-method">method</span>
+    </div>
+    <div class="member-sig">getChatId(): string</div>
+    <div class="member-desc">Returns the chat ID.</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">getTitle()</span>
+      <span class="member-tag tag-method">method</span>
+    </div>
+    <div class="member-sig">getTitle(): string</div>
+    <div class="member-desc">Returns the chat title.</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">getOwner()</span>
+      <span class="member-tag tag-method">method</span>
+    </div>
+    <div class="member-sig">getOwner(): <a href="Participant.html">Participant</a></div>
+    <div class="member-desc">Returns the chat owner.</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">getParticipants()</span>
+      <span class="member-tag tag-method">method</span>
+    </div>
+    <div class="member-sig">getParticipants(): <a href="Participant.html">Participant</a>[]</div>
+    <div class="member-desc">Returns the list of participants.</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">getLastmsguid()</span>
+      <span class="member-tag tag-method">method</span>
+    </div>
+    <div class="member-sig">getLastmsguid(): string | null</div>
+    <div class="member-desc">Returns the last message UID.</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">getMessage(limit?)</span>
+      <span class="member-tag tag-method">method</span>
+    </div>
+    <div class="member-sig">getMessage(limit?: number): Message | Message[]</div>
+    <div class="member-desc">
+      Returns messages. If <code>limit</code> is provided and messages is an array,
+      returns the last <code>limit</code> messages.
+    </div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">addMessage(message)</span>
+      <span class="member-tag tag-method">method</span>
+    </div>
+    <div class="member-sig">addMessage(message: <a href="Message.html">Message</a>): void</div>
+    <div class="member-desc">Add a message to this chat's message list.</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">toJSON()</span>
+      <span class="member-tag tag-method">method</span>
+    </div>
+    <div class="member-sig">toJSON(): { chat_id, title, lastmsguid }</div>
+    <div class="member-desc">Returns a plain object representation.</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">toString()</span>
+      <span class="member-tag tag-method">method</span>
+    </div>
+    <div class="member-sig">toString(): string</div>
+    <div class="member-desc">Returns JSON string (pretty-printed).</div>
+  </div>
+
+  <pre><code class="language-javascript">const chats = await bot.fetchChats();
+for (const [id, chat] of Object.entries(chats)) {
+  console.log(chat.getTitle());
+  console.log(`Owner: ${chat.getOwner().getDname()}`);
+  console.log(`Participants: ${chat.getParticipants().length}`);
+
+  // Use chat object to send messages
+  await bot.sender.sendMessage('Hello!', { chat });
+}</code></pre>
+
+  <div class="site-footer">
+    Arattix &copy; 2025 SafwanGanz — MIT License —
+    <a href="https://github.com/SafwanGanz/Arattix">GitHub</a>
+  </div>
+
+</main>
+
+<aside class="page-toc">
+  <div class="toc-title">On This Page</div>
+  <a href="#constructor">Constructor</a>
+  <a href="#properties">Properties</a>
+  <a href="#methods">Methods</a>
+</aside>
+</div>
+
+<script>hljs.highlightAll();</script>
+<script src="../assets/main.js"></script>
+</body>
+</html>

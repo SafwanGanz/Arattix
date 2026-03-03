@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Message — Arattix Documentation</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+
+<nav class="site-sidebar">
+  <div class="sidebar-header">
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">A</div>
+      <span class="logo-text">Arattix</span>
+      <span class="logo-version">v1.0.0</span>
+    </a>
+  </div>
+  <div class="sidebar-nav">
+    <div class="sidebar-section"><div class="sidebar-section-title">Guide</div></div>
+    <a href="../index.html">Introduction</a>
+    <a href="../getting-started.html">Getting Started</a>
+    <a href="../examples.html">Examples</a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Socket</div></div>
+    <a href="ArattixBot.html">ArattixBot <span class="badge badge-class">C</span></a>
+    <a href="Bot.html">Bot <span class="badge badge-class">C</span></a>
+    <a href="MessageSender.html">MessageSender <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Types</div></div>
+    <a href="Chat.html">Chat <span class="badge badge-class">C</span></a>
+    <a href="ChatManager.html">ChatManager <span class="badge badge-class">C</span></a>
+    <a href="Message.html" class="active">Message <span class="badge badge-class">C</span></a>
+    <a href="MediaInfo.html">MediaInfo <span class="badge badge-class">C</span></a>
+    <a href="Participant.html">Participant <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Other</div></div>
+    <a href="../modules/Defaults.html">Defaults <span class="badge badge-const">D</span></a>
+    <a href="../modules/Auth.html">Auth <span class="badge badge-fn">M</span></a>
+  </div>
+</nav>
+
+<div class="site-content">
+<main class="page-content">
+
+  <div class="breadcrumb">
+    <a href="../index.html">arattix</a>
+    <span class="separator">›</span>
+    <a href="../index.html#api-reference">Types</a>
+    <span class="separator">›</span>
+    Message
+  </div>
+
+  <h1>Class: Message</h1>
+  <p>
+    Represents a single chat message from the V1 API format. Used internally when parsing
+    last-message info from the chat list.
+  </p>
+  <p><strong>Source:</strong> <code>src/Types/Message.js</code></p>
+
+  <div class="callout">
+    <strong>V1 vs V2 Messages</strong>
+    This class represents the V1 message format (from chat list data).
+    The V2 API (<code>bot.fetchMessages()</code>) returns raw objects with a different structure
+    — use <a href="MediaInfo.html">MediaInfo</a> and <a href="Bot.html#static">Bot.isMediaMessage()</a>
+    for V2 message handling.
+  </div>
+
+  <h2 id="constructor">Constructor</h2>
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">new Message(msguid, msg)</span>
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>msguid</dt>
+        <dd><code>string</code> — Unique message ID.</dd>
+        <dt>msg</dt>
+        <dd><code>string</code> — Message content text.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <h2 id="properties">Properties</h2>
+  <table>
+    <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>msguid</code></td><td><code>string</code></td><td>Unique message identifier</td></tr>
+      <tr><td><code>msg</code></td><td><code>string</code></td><td>Message text content</td></tr>
+    </tbody>
+  </table>
+
+  <pre><code class="language-javascript">const { Message } = require('arattix');
+
+const msg = new Message('uid_12345', 'Hello world!');
+console.log(msg.msguid); // "uid_12345"
+console.log(msg.msg);    // "Hello world!"</code></pre>
+
+  <div class="site-footer">
+    Arattix &copy; 2025 SafwanGanz — MIT License —
+    <a href="https://github.com/SafwanGanz/Arattix">GitHub</a>
+  </div>
+
+</main>
+
+<aside class="page-toc">
+  <div class="toc-title">On This Page</div>
+  <a href="#constructor">Constructor</a>
+  <a href="#properties">Properties</a>
+</aside>
+</div>
+
+<script>hljs.highlightAll();</script>
+<script src="../assets/main.js"></script>
+</body>
+</html>

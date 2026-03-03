@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MessageSender — Arattix Documentation</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+
+<nav class="site-sidebar">
+  <div class="sidebar-header">
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">A</div>
+      <span class="logo-text">Arattix</span>
+      <span class="logo-version">v1.0.0</span>
+    </a>
+  </div>
+  <div class="sidebar-nav">
+    <div class="sidebar-section"><div class="sidebar-section-title">Guide</div></div>
+    <a href="../index.html">Introduction</a>
+    <a href="../getting-started.html">Getting Started</a>
+    <a href="../examples.html">Examples</a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Socket</div></div>
+    <a href="ArattixBot.html">ArattixBot <span class="badge badge-class">C</span></a>
+    <a href="Bot.html">Bot <span class="badge badge-class">C</span></a>
+    <a href="MessageSender.html" class="active">MessageSender <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Types</div></div>
+    <a href="Chat.html">Chat <span class="badge badge-class">C</span></a>
+    <a href="ChatManager.html">ChatManager <span class="badge badge-class">C</span></a>
+    <a href="Message.html">Message <span class="badge badge-class">C</span></a>
+    <a href="MediaInfo.html">MediaInfo <span class="badge badge-class">C</span></a>
+    <a href="Participant.html">Participant <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Other</div></div>
+    <a href="../modules/Defaults.html">Defaults <span class="badge badge-const">D</span></a>
+    <a href="../modules/Auth.html">Auth <span class="badge badge-fn">M</span></a>
+  </div>
+</nav>
+
+<div class="site-content">
+<main class="page-content">
+
+  <div class="breadcrumb">
+    <a href="../index.html">arattix</a>
+    <span class="separator">›</span>
+    <a href="../index.html#api-reference">Socket</a>
+    <span class="separator">›</span>
+    MessageSender
+  </div>
+
+  <h1>Class: MessageSender</h1>
+  <p>
+    Sends text messages and files to Arattai chats. Access it via
+    <code>bot.sender</code> (see <a href="Bot.html#properties">Bot.sender</a>).
+  </p>
+  <p><strong>Source:</strong> <code>src/Socket/messages.js</code></p>
+
+  <!-- Constructor -->
+  <h2 id="constructor">Constructor</h2>
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">new MessageSender(session)</span>
+    </div>
+    <div class="member-sig">constructor(session: AxiosInstance)</div>
+    <div class="member-desc">
+      Creates a MessageSender with the authenticated session. You typically don't construct this
+      directly — use <code>bot.sender</code> instead.
+    </div>
+  </div>
+
+  <!-- Text Messaging -->
+  <h2 id="text">Text Messaging</h2>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">sendMessage(message, options)</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">sendMessage(message: string, { chatId?, dname?, chat? }): Promise&lt;object&gt;</div>
+    <div class="member-desc">
+      Send a text message to a chat. You can specify the target by
+      <code>chatId</code> + <code>dname</code>, or pass a <a href="Chat.html">Chat</a> object.
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>message</dt>
+        <dd><code>string</code> — The message text.</dd>
+        <dt>options.chatId</dt>
+        <dd><code>string</code> — Target chat ID.</dd>
+        <dt>options.dname</dt>
+        <dd><code>string</code> — Display name for the sender.</dd>
+        <dt>options.chat</dt>
+        <dd><code>Chat</code> — A Chat object (overrides chatId/dname).</dd>
+        <dt>Returns</dt>
+        <dd><code>Promise&lt;object&gt;</code> — API response data.</dd>
+        <dt>Throws</dt>
+        <dd><code>Error</code> — If neither chatId nor chat is provided.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <pre><code class="language-javascript">// Using chatId
+await bot.sender.sendMessage('Hello!', {
+  chatId: '12345',
+  dname: 'My Bot'
+});
+
+// Using Chat object
+const chats = await bot.fetchChats();
+const chat = Object.values(chats)[0];
+await bot.sender.sendMessage('Hello!', { chat });</code></pre>
+
+  <!-- File Sending -->
+  <h2 id="files">File Sending</h2>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">sendFile(filePath, caption, options)</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">sendFile(filePath: string, caption?: string, { chatId?, dname?, chat? }): Promise&lt;object&gt;</div>
+    <div class="member-desc">
+      Upload and send a file from the local filesystem. The MIME type is automatically detected
+      from the file extension.
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>filePath</dt>
+        <dd><code>string</code> — Absolute or relative path to the file.</dd>
+        <dt>caption</dt>
+        <dd><code>string</code> — Optional caption. Default: <code>""</code></dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">sendBuffer(buffer, fileName, options)</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">sendBuffer(buffer: Buffer, fileName: string, { chatId?, chat?, mimeType?, caption? }): Promise&lt;object&gt;</div>
+    <div class="member-desc">
+      Send a Buffer as a file. Perfect for forwarding downloaded media or sending generated content.
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>buffer</dt>
+        <dd><code>Buffer</code> — The file data.</dd>
+        <dt>fileName</dt>
+        <dd><code>string</code> — Display name (e.g. <code>"photo.jpg"</code>).</dd>
+        <dt>options.mimeType</dt>
+        <dd><code>string</code> — MIME type override. Auto-detected from fileName if omitted.</dd>
+        <dt>options.caption</dt>
+        <dd><code>string</code> — Caption. Default: <code>""</code></dd>
+      </dl>
+    </div>
+  </div>
+
+  <pre><code class="language-javascript">// Send file from disk
+await bot.sender.sendFile('/path/to/photo.jpg', 'Nice photo!', { chatId });
+
+// Send buffer
+const data = fs.readFileSync('report.pdf');
+await bot.sender.sendBuffer(data, 'report.pdf', { chatId, caption: 'Monthly report' });</code></pre>
+
+  <!-- Convenience Methods -->
+  <h2 id="convenience">Convenience Methods</h2>
+  <p>These are aliases for <code>sendFile()</code> that improve code readability:</p>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">sendImage(filePath, caption, opts)</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">sendImage(filePath: string, caption?: string, opts?): Promise&lt;object&gt;</div>
+    <div class="member-desc">Send an image file. Alias for <code>sendFile()</code>.</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">sendAudio(filePath, caption, opts)</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">sendAudio(filePath: string, caption?: string, opts?): Promise&lt;object&gt;</div>
+    <div class="member-desc">Send an audio file. Alias for <code>sendFile()</code>.</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">sendVideo(filePath, caption, opts)</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">sendVideo(filePath: string, caption?: string, opts?): Promise&lt;object&gt;</div>
+    <div class="member-desc">Send a video file. Alias for <code>sendFile()</code>.</div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">sendDocument(filePath, caption, opts)</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">sendDocument(filePath: string, caption?: string, opts?): Promise&lt;object&gt;</div>
+    <div class="member-desc">Send a document. Alias for <code>sendFile()</code>.</div>
+  </div>
+
+  <pre><code class="language-javascript">await bot.sender.sendImage('./photo.jpg', 'Check this!', { chatId });
+await bot.sender.sendAudio('./song.mp3', '', { chatId });
+await bot.sender.sendVideo('./clip.mp4', 'Funny video', { chatId });
+await bot.sender.sendDocument('./report.pdf', 'Q4 Report', { chatId });</code></pre>
+
+  <div class="site-footer">
+    Arattix &copy; 2025 SafwanGanz — MIT License —
+    <a href="https://github.com/SafwanGanz/Arattix">GitHub</a>
+  </div>
+
+</main>
+
+<aside class="page-toc">
+  <div class="toc-title">On This Page</div>
+  <a href="#constructor">Constructor</a>
+  <a href="#text">Text Messaging</a>
+  <a href="#files">File Sending</a>
+  <a href="#convenience">Convenience Methods</a>
+</aside>
+</div>
+
+<script>hljs.highlightAll();</script>
+<script src="../assets/main.js"></script>
+</body>
+</html>

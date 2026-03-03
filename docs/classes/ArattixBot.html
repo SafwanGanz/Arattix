@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArattixBot — Arattix Documentation</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs2015.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+
+<!-- ════════════════ SIDEBAR ════════════════ -->
+<nav class="site-sidebar">
+  <div class="sidebar-header">
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">A</div>
+      <span class="logo-text">Arattix</span>
+      <span class="logo-version">v1.0.0</span>
+    </a>
+  </div>
+  <div class="sidebar-nav">
+    <div class="sidebar-section"><div class="sidebar-section-title">Guide</div></div>
+    <a href="../index.html">Introduction</a>
+    <a href="../getting-started.html">Getting Started</a>
+    <a href="../examples.html">Examples</a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Socket</div></div>
+    <a href="ArattixBot.html" class="active">ArattixBot <span class="badge badge-class">C</span></a>
+    <a href="Bot.html">Bot <span class="badge badge-class">C</span></a>
+    <a href="MessageSender.html">MessageSender <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Types</div></div>
+    <a href="Chat.html">Chat <span class="badge badge-class">C</span></a>
+    <a href="ChatManager.html">ChatManager <span class="badge badge-class">C</span></a>
+    <a href="Message.html">Message <span class="badge badge-class">C</span></a>
+    <a href="MediaInfo.html">MediaInfo <span class="badge badge-class">C</span></a>
+    <a href="Participant.html">Participant <span class="badge badge-class">C</span></a>
+    <div class="sidebar-section"><div class="sidebar-section-title">Other</div></div>
+    <a href="../modules/Defaults.html">Defaults <span class="badge badge-const">D</span></a>
+    <a href="../modules/Auth.html">Auth <span class="badge badge-fn">M</span></a>
+  </div>
+</nav>
+
+<!-- ════════════════ CONTENT ════════════════ -->
+<div class="site-content">
+<main class="page-content">
+
+  <div class="breadcrumb">
+    <a href="../index.html">arattix</a>
+    <span class="separator">›</span>
+    <a href="../index.html#api-reference">Socket</a>
+    <span class="separator">›</span>
+    ArattixBot
+  </div>
+
+  <h1>Class: ArattixBot</h1>
+  <p>
+    Main entry point for the Arattix library. Creates an authenticated HTTP session,
+    handles QR code login, and returns a <a href="Bot.html">Bot</a> instance ready to use.
+  </p>
+  <p><strong>Source:</strong> <code>src/Socket/index.js</code></p>
+
+  <!-- Constructor -->
+  <h2 id="constructor">Constructor</h2>
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">new ArattixBot(options?)</span>
+    </div>
+    <div class="member-sig">constructor({ isShowQr?, proxy? })</div>
+    <div class="member-desc">
+      Creates a new ArattixBot client with an axios session and cookie jar.
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>options.isShowQr</dt>
+        <dd><code>boolean</code> — Display QR code in the terminal. Default: <code>true</code></dd>
+        <dt>options.proxy</dt>
+        <dd><code>string | null</code> — HTTP proxy URL (e.g. <code>"http://127.0.0.1:8080"</code>). Default: <code>null</code></dd>
+      </dl>
+    </div>
+  </div>
+
+  <pre><code class="language-javascript">const { ArattixBot } = require('arattix');
+
+// Default — show QR in terminal
+const arattix = new ArattixBot();
+
+// With options
+const arattix = new ArattixBot({
+  isShowQr: true,
+  proxy: 'http://127.0.0.1:8080'
+});</code></pre>
+
+  <!-- Properties -->
+  <h2 id="properties">Properties</h2>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">session</span>
+      <span class="member-tag tag-property">property</span>
+    </div>
+    <div class="member-sig">AxiosInstance</div>
+    <div class="member-desc">
+      The underlying axios instance with cookie jar support. Created during construction.
+    </div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">isShowQr</span>
+      <span class="member-tag tag-property">property</span>
+    </div>
+    <div class="member-sig">boolean</div>
+    <div class="member-desc">
+      Whether to render the QR code in the terminal during login.
+    </div>
+  </div>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">token</span>
+      <span class="member-tag tag-property">property</span>
+    </div>
+    <div class="member-sig">string | null</div>
+    <div class="member-desc">
+      Auth token (populated after login). Initially <code>null</code>.
+    </div>
+  </div>
+
+  <!-- Methods -->
+  <h2 id="methods">Methods</h2>
+
+  <div class="member-card">
+    <div class="member-header">
+      <span class="member-name">loginWithQr()</span>
+      <span class="member-tag tag-method">async</span>
+    </div>
+    <div class="member-sig">loginWithQr(): Promise&lt;<a href="Bot.html">Bot</a>&gt;</div>
+    <div class="member-desc">
+      Authenticate using QR code login. If a saved session (<code>cookies.json</code>) is valid,
+      it will be reused without showing the QR code. Otherwise, a new QR code is displayed
+      for scanning.
+    </div>
+    <div class="member-params">
+      <dl>
+        <dt>Returns</dt>
+        <dd><code>Promise&lt;Bot&gt;</code> — An authenticated <a href="Bot.html">Bot</a> instance.</dd>
+        <dt>Throws</dt>
+        <dd><code>Error</code> — If QR login fails.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <pre><code class="language-javascript">const arattix = new ArattixBot({ isShowQr: true });
+
+try {
+  const bot = await arattix.loginWithQr();
+  await bot.setupCsrf();
+  console.log('Logged in!');
+} catch (err) {
+  console.error('Login failed:', err.message);
+}</code></pre>
+
+  <!-- Full Example -->
+  <h2 id="full-example">Full Example</h2>
+  <pre><code class="language-javascript">const { ArattixBot } = require('arattix');
+
+async function main() {
+  const arattix = new ArattixBot({ isShowQr: true });
+  const bot = await arattix.loginWithQr();
+  await bot.setupCsrf();
+
+  // Fetch chats
+  const chats = await bot.fetchChats({ limit: 10 });
+  console.log(`Found ${Object.keys(chats).length} chats`);
+
+  // Send a message to the first chat
+  const firstChat = Object.values(chats)[0];
+  if (firstChat) {
+    await bot.sender.sendMessage('Hello from Arattix!', { chat: firstChat });
+  }
+}
+
+main();</code></pre>
+
+  <div class="site-footer">
+    Arattix &copy; 2025 SafwanGanz — MIT License —
+    <a href="https://github.com/SafwanGanz/Arattix">GitHub</a>
+  </div>
+
+</main>
+
+<aside class="page-toc">
+  <div class="toc-title">On This Page</div>
+  <a href="#constructor">Constructor</a>
+  <a href="#properties">Properties</a>
+  <a href="#methods">Methods</a>
+  <a href="#full-example">Full Example</a>
+</aside>
+</div>
+
+<script>hljs.highlightAll();</script>
+<script src="../assets/main.js"></script>
+</body>
+</html>

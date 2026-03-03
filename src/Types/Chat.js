@@ -1,38 +1,5 @@
-/**
- * Represents a single chat message.
- */
-class Message {
-  /**
-   * @param {string} msguid - Unique message ID.
-   * @param {string} msg - Message content.
-   */
-  constructor(msguid, msg) {
-    this.msguid = msguid;
-    this.msg = msg;
-  }
-}
-
-/**
- * Represents a chat participant.
- */
-class Participant {
-  /**
-   * @param {string} dname - Display name.
-   * @param {string} zuid - Zone user ID.
-   */
-  constructor(dname, zuid) {
-    this.dname = dname;
-    this.zuid = zuid;
-  }
-
-  getDname() {
-    return this.dname;
-  }
-
-  getZuid() {
-    return this.zuid;
-  }
-}
+const { Message } = require('./Message');
+const Participant = require('./Participant');
 
 /**
  * Represents a single chat with its metadata, participants, and messages.
@@ -55,9 +22,6 @@ class Chat {
     this.lastmsguid = lastmsguid;
   }
 
-  /**
-   * JSON-friendly representation of the chat.
-   */
   toJSON() {
     return {
       chat_id: this.chatId,
@@ -70,31 +34,17 @@ class Chat {
     return JSON.stringify(this.toJSON(), null, 2);
   }
 
-  getChatId() {
-    return this.chatId;
-  }
-
-  getTitle() {
-    return this.title;
-  }
-
-  getOwner() {
-    return this.owner;
-  }
-
-  getParticipants() {
-    return this.participants;
-  }
+  getChatId() { return this.chatId; }
+  getTitle() { return this.title; }
+  getOwner() { return this.owner; }
+  getParticipants() { return this.participants; }
+  getLastmsguid() { return this.lastmsguid; }
 
   getMessage(limit) {
     if (Array.isArray(this.message)) {
       return limit ? this.message.slice(-limit) : this.message;
     }
     return this.message;
-  }
-
-  getLastmsguid() {
-    return this.lastmsguid;
   }
 
   addMessage(message) {
@@ -170,9 +120,4 @@ class ChatManager {
   }
 }
 
-module.exports = {
-  Message,
-  Participant,
-  Chat,
-  ChatManager,
-};
+module.exports = { Chat, ChatManager };
