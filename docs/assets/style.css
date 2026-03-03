@@ -73,14 +73,8 @@ a:hover { text-decoration: underline; }
 .sidebar-header .logo-icon {
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, #00b4d8, #0077b6);
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  font-weight: 700;
-  color: #fff;
+  object-fit: cover;
 }
 
 .sidebar-header .logo-text {
@@ -257,16 +251,10 @@ li { margin-bottom: 0.3rem; }
 .hero-logo {
   width: 80px;
   height: 80px;
-  background: linear-gradient(135deg, #00b4d8, #0077b6);
   border-radius: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 36px;
-  font-weight: 800;
-  color: #fff;
+  object-fit: cover;
   margin-bottom: 1rem;
-  box-shadow: 0 4px 20px rgba(0,119,182,0.3);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
 
 .hero h1 {
