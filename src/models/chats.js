@@ -152,7 +152,7 @@ class ChatManager {
               ? JSON.parse(data.lastmsginfo)
               : data.lastmsginfo;
           lastmsguid = lastmsginfo.msguid;
-          msg = new Message(lastmsginfo.msg, lastmsginfo.msguid);
+          msg = new Message(lastmsginfo.msguid, lastmsginfo.msg);
         }
 
         const owner = new Participant(data.owner.name, data.owner.id);
