@@ -1,4 +1,7 @@
-# Arattix
+<div align="center">
+  <img src="https://e.top4top.io/p_3714329231.png" alt="Arattix" width="120" height="120">
+  <h1>Arattix</h1>
+</div>
 
 Node.js library for the **Arattai** messaging API — send messages, media, and build bots.
 
@@ -41,37 +44,6 @@ Or the class-based command bot:
 
 ```bash
 node Example/command-bot.js
-```
-
-## Project Structure
-
-```
-arattix/
-├── src/
-│   ├── Auth/              # Authentication (QR login, session management)
-│   │   ├── index.js
-│   │   ├── qr-login.js
-│   │   ├── session-manager.js
-│   │   └── token-login.js
-│   ├── Defaults/          # Constants & configuration
-│   │   └── index.js
-│   ├── Socket/            # Core API (connection, chats, messages, media)
-│   │   ├── index.js       # ArattixBot entry point
-│   │   ├── bot.js         # Bot class — chats, messages, media download
-│   │   └── messages.js    # MessageSender — send text, files, media
-│   ├── Types/             # Data models
-│   │   ├── index.js
-│   │   ├── Chat.js        # Chat, ChatManager
-│   │   ├── Message.js     # Message, MediaInfo
-│   │   └── Participant.js # Participant
-│   └── index.js           # Barrel export
-├── Example/
-│   ├── simple-bot.js      # Polling bot with commands + media detection
-│   └── command-bot.js     # Class-based bot
-├── index.js               # Package entry
-├── package.json
-├── LICENSE
-└── README.md
 ```
 
 ## API Reference
