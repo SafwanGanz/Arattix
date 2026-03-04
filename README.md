@@ -46,36 +46,6 @@ Or the class-based command bot:
 node Example/command-bot.js
 ```
 
-## Project Structure
-
-```
-arattix/
-├── src/
-│   ├── Auth/              # Authentication (QR login, session management)
-│   │   ├── index.js
-│   │   ├── qr-login.js
-│   │   ├── session-manager.js
-│   │   └── token-login.js
-│   ├── Defaults/          # Constants & configuration
-│   │   └── index.js
-│   ├── Socket/            # Core API (connection, chats, messages, media)
-│   │   ├── index.js       # ArattixBot entry point
-│   │   ├── bot.js         # Bot class — chats, messages, media download
-│   │   └── messages.js    # MessageSender — send text, files, media
-│   ├── Types/             # Data models
-│   │   ├── index.js
-│   │   ├── Chat.js        # Chat, ChatManager
-│   │   ├── Message.js     # Message, MediaInfo
-│   │   └── Participant.js # Participant
-│   └── index.js           # Barrel export
-├── Example/
-│   ├── simple-bot.js      # Polling bot with commands + media detection
-│   └── command-bot.js     # Class-based bot
-├── index.js               # Package entry
-├── package.json
-├── LICENSE
-└── README.md
-```
 
 ## API Reference
 
