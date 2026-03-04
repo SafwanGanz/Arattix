@@ -46,57 +46,35 @@ Or the class-based command bot:
 node Example/command-bot.js
 ```
 
-## Docker Support
+## Project Structure
 
-Run Arattix bots in Docker containers for easy deployment and isolated environments.
-
-### Quick Start with Docker
-
-Build and run with Docker:
-
-```bash
-# Build the image
-docker build -t arattix-bot .
-
-# Run the container
-docker run -v $(pwd)/cookies.json:/app/cookies.json -v $(pwd)/downloads:/app/downloads arattix-bot
 ```
-
-### Using Docker Compose
-
-For easier management, use Docker Compose:
-
-```bash
-# Run production bot
-docker-compose up arattix-bot
-
-# Run development environment with hot reload
-docker-compose --profile dev up arattix-dev
-```
-
-### Custom Bot with Docker
-
-Create your own bot file and mount it:
-
-```bash
-# Create your bot
-echo 'const { ArattixBot } = require("arattix");
-(async () => {
-  const arattix = new ArattixBot({ isShowQr: true });
-  const bot = await arattix.loginWithQr();
-  console.log("Bot is running...");
-})();' > my-bot.js
-
-# Run with Docker
-docker run -v $(pwd)/my-bot.js:/app/my-bot.js -v $(pwd)/cookies.json:/app/cookies.json arattix-bot node my-bot.js
-```
-
-### Environment Variables
-
-Configure your bot using environment variables:
-
-```bash
-docker run -e NODE_ENV=production -e BOT_NAME="MyBot" arattix-bot
+arattix/
+├── src/
+│   ├── Auth/              # Authentication (QR login, session management)
+│   │   ├── index.js
+│   │   ├── qr-login.js
+│   │   ├── session-manager.js
+│   │   └── token-login.js
+│   ├── Defaults/          # Constants & configuration
+│   │   └── index.js
+│   ├── Socket/            # Core API (connection, chats, messages, media)
+│   │   ├── index.js       # ArattixBot entry point
+│   │   ├── bot.js         # Bot class — chats, messages, media download
+│   │   └── messages.js    # MessageSender — send text, files, media
+│   ├── Types/             # Data models
+│   │   ├── index.js
+│   │   ├── Chat.js        # Chat, ChatManager
+│   │   ├── Message.js     # Message, MediaInfo
+│   │   └── Participant.js # Participant
+│   └── index.js           # Barrel export
+├── Example/
+│   ├── simple-bot.js      # Polling bot with commands + media detection
+│   └── command-bot.js     # Class-based bot
+├── index.js               # Package entry
+├── package.json
+├── LICENSE
+└── README.md
 ```
 
 ## API Reference
