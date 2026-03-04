@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  arattix-bot:
+    build: .
+    container_name: arattix-bot
+    restart: unless-stopped
+    volumes:
+      # Persist session cookies
+      - ./cookies.json:/app/cookies.json
+      # Persist downloads
+      - ./downloads:/app/downloads
+      # Optional: Mount your custom bot script
+      # - ./my-bot.js:/app/my-bot.js
+    environment:
+      - NODE_ENV=production
+      - BOT_NAME=Arattix Docker Bot
+      - SHOW_QR=true
+      - POLL_INTERVAL=3000
+      - LOG_LEVEL=info
+    # Uncomment to use .env file
+    # env_file:
+    #   - .env
+    # Uncomment if your bot needs network access
+    # network_mode: host
+    
+  # For development with hot reload
+  arattix-dev:
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: arattix-dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - BOT_NAME=Arattix Dev Bot
+      - LOG_LEVEL=debug
+    # Uncomment to use .env file for development
+    # env_file:
+    #   - .env.development
+    command: nodemon Example/docker-bot.js
+    profiles: ["dev"]

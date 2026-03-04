@@ -308,6 +308,94 @@ async function main() {
 
 main();</code></pre>
 
+  <!-- Docker Deployment -->
+  <h2 id="docker-deployment">Docker Deployment</h2>
+  <p>
+    Deploy any of the above bots using Docker for production environments.
+  </p>
+
+  <h3>Create your bot file</h3>
+  <pre><code class="language-javascript">// my-production-bot.js
+const { ArattixBot } = require('arattix');
+
+async function main() {
+  console.log('🐳 Starting containerized Arattix bot...');
+  
+  const arattix = new ArattixBot({ 
+    isShowQr: true,
+    // Use environment variables for configuration
+    proxy: process.env.HTTP_PROXY || null 
+  });
+  
+  const bot = await arattix.loginWithQr();
+  await bot.setupCsrf();
+  
+  const chats = await bot.fetchChatsRaw({ limit: 10 });
+  console.log(`📋 Monitoring ${chats.data?.chats?.length || 0} chats`);
+  
+  // Your bot logic here...
+  // Example: Simple echo functionality
+  const lastSeen = {};
+  
+  setInterval(async () => {
+    for (const chat of chats.data?.chats || []) {
+      try {
+        const msgs = await bot.fetchMessages(chat.chatid, { limit: 5 });
+        for (const msg of msgs) {
+          if (lastSeen[chat.chatid] && msg.id <= lastSeen[chat.chatid]) continue;
+          
+          if (msg.content?.text?.startsWith('/hello')) {
+            await bot.sender.sendMessage('🐳 Hello from Docker!', {
+              chatId: chat.chatid,
+              dname: 'Docker Bot'
+            });
+          }
+        }
+        if (msgs.length) lastSeen[chat.chatid] = msgs.at(-1).id;
+      } catch (err) {
+        console.error(`Error in chat ${chat.chatid}:`, err.message);
+      }
+    }
+  }, 5000);
+}
+
+main().catch(console.error);</code></pre>
+
+  <h3>Deploy with Docker</h3>
+  <pre><code class="language-bash"># Build the image
+docker build -t my-arattix-bot .
+
+# Run with persistence
+docker run -d \
+  --name arattix-production \
+  -v $(pwd)/cookies.json:/app/cookies.json \
+  -v $(pwd)/downloads:/app/downloads \
+  -v $(pwd)/my-production-bot.js:/app/my-production-bot.js \
+  -e NODE_ENV=production \
+  my-arattix-bot node my-production-bot.js
+
+# Check logs
+docker logs -f arattix-production</code></pre>
+
+  <h3>Using Docker Compose</h3>
+  <pre><code class="language-yaml"># docker-compose.override.yml
+services:
+  arattix-bot:
+    volumes:
+      - ./my-production-bot.js:/app/my-production-bot.js
+    command: node my-production-bot.js
+    environment:
+      - NODE_ENV=production
+      - BOT_NAME=MyProductionBot</code></pre>
+
+  <div class="callout">
+    <strong>Production Tips</strong>
+    • Always use volume mounts for <code>cookies.json</code> persistence<br>
+    • Set restart policies with <code>--restart unless-stopped</code><br>
+    • Monitor logs with <code>docker logs</code><br>
+    • Use healthchecks to ensure your bot is responsive
+  </div>
+
   <div class="site-footer">
     Arattix &copy; 2025 SafwanGanz — MIT License —
     <a href="https://github.com/SafwanGanz/Arattix">GitHub</a>
@@ -321,6 +409,7 @@ main();</code></pre>
   <a href="#echo-bot">Minimal Echo Bot</a>
   <a href="#media-forwarder">Media Forwarder</a>
   <a href="#list-chats">List All Chats</a>
+  <a href="#docker-deployment">Docker Deployment</a>
 </aside>
 </div>
 

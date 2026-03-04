@@ -1,0 +1,28 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies (including dev)
+RUN npm install
+
+# Install nodemon for hot reload
+RUN npm install -g nodemon
+
+# Copy source code
+COPY . .
+
+# Create downloads directory
+RUN mkdir -p downloads
+
+# Set user
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S arattix -u 1001
+RUN chown -R arattix:nodejs /app
+USER arattix
+
+EXPOSE 3000
+
+CMD ["nodemon", "Example/simple-bot.js"]

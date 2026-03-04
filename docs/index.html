@@ -145,6 +145,14 @@ main();</code></pre>
 cd Arattix
 npm install</code></pre>
 
+  <p><strong>Docker Support:</strong></p>
+  <pre><code class="language-bash"># Run with Docker
+docker build -t arattix-bot .
+docker run -v $(pwd)/cookies.json:/app/cookies.json arattix-bot
+
+# Or use Docker Compose
+docker-compose up arattix-bot</code></pre>
+
   <!-- Getting Started Overview -->
   <h2 id="getting-started">Getting Started</h2>
 

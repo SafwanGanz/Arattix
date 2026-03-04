@@ -71,6 +71,34 @@
 cd Arattix
 npm install</code></pre>
 
+  <!-- Docker Installation -->
+  <h2 id="docker-installation">Docker Installation</h2>
+  <p>Run Arattix bots in Docker containers for easy deployment:</p>
+  
+  <h3>Using Docker directly</h3>
+  <pre><code class="language-bash"># Clone and build
+git clone https://github.com/SafwanGanz/Arattix.git
+cd Arattix
+docker build -t arattix-bot .
+
+# Run with mounted volumes for persistence
+docker run -v $(pwd)/cookies.json:/app/cookies.json \
+           -v $(pwd)/downloads:/app/downloads \
+           arattix-bot</code></pre>
+
+  <h3>Using Docker Compose</h3>
+  <pre><code class="language-bash"># Production environment
+docker-compose up arattix-bot
+
+# Development with hot reload
+docker-compose --profile dev up arattix-dev</code></pre>
+
+  <div class="callout">
+    <strong>Volume Mounting</strong>
+    The Docker setup persists your authentication session in <code>cookies.json</code>
+    and downloaded files in the <code>downloads</code> folder using volume mounts.
+  </div>
+
   <!-- First Bot -->
   <h2 id="first-bot">Your First Bot</h2>
   <p>Create a file called <code>bot.js</code>:</p>

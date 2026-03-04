@@ -1,0 +1,20 @@
+# Docker
+node_modules
+npm-debug.log
+Dockerfile*
+docker-compose*
+.dockerignore
+.git
+.gitignore
+README.md
+.env
+.nyc_output
+coverage
+.nyc_output
+.coverage
+.coverage/
+.vscode
+.idea
+*.swp
+*.swo
+*~

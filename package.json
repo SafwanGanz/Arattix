@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "example": "node Example/simple-bot.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docker:build": "docker build -t arattix-bot .",
+    "docker:run": "docker run -v $(pwd)/cookies.json:/app/cookies.json -v $(pwd)/downloads:/app/downloads arattix-bot",
+    "docker:dev": "docker-compose --profile dev up arattix-dev",
+    "docker:prod": "docker-compose up arattix-bot"
   },
   "keywords": [
     "arattai",
